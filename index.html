@@ -68,20 +68,28 @@ img { max-width: 100%; border-radius: 6px; }
 .theme-toggle:hover { color: var(--fg); background: var(--bg-secondary); }
 @media print { .theme-toggle { display: none; } }
 .page-outline { position: fixed; left: 16px; top: 96px; z-index: 5; max-height: calc(100vh - 128px); display: flex; }
-.page-outline ol { list-style: none; margin: 0; padding: 8px; border-radius: 12px; border: 1px solid transparent; overflow: hidden auto; scrollbar-width: none; }
+.page-outline ol { list-style: none; margin: 0; padding: 8px; border-radius: 12px; border: 1px solid transparent; overflow: hidden auto; scrollbar-width: none; transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease; }
 .page-outline li { margin: 0; }
-.page-outline button { display: flex; align-items: center; gap: 14px; width: 100%; padding: 4px 6px; border: 0; border-radius: 7px; background: none; color: var(--fg-muted); font: inherit; font-size: 14.5px; line-height: 1.45; text-align: left; cursor: pointer; }
+.page-outline button { display: flex; align-items: center; width: 100%; padding: 4px 6px; border: 0; border-radius: 7px; background: none; color: var(--fg-muted); font: inherit; font-size: 14.5px; line-height: 1.45; text-align: left; cursor: pointer; }
 .po-dash { flex: none; height: 3px; border-radius: 2px; background: currentColor; opacity: .55; }
-.po-text { display: none; max-width: 300px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* The titles slide open: width, gap and indent grow from 0 (display can't animate). */
+.po-text { max-width: 0; margin-left: 0; padding-left: 0; opacity: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: max-width .22s ease, margin-left .22s ease, padding-left .22s ease, opacity .15s ease; }
 .page-outline button[aria-current="true"] { color: var(--fg); }
 .page-outline button[aria-current="true"] .po-dash { background: var(--outline-active); opacity: 1; }
 .page-outline:hover ol, .page-outline:focus-within ol { background: var(--bg); border-color: var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
-.page-outline:hover .po-text, .page-outline:focus-within .po-text { display: block; }
+.page-outline:hover .po-text, .page-outline:focus-within .po-text { max-width: 300px; margin-left: 14px; padding-left: var(--po-indent); opacity: 1; }
 .page-outline:hover button:hover, .page-outline button:focus-visible { background: var(--bg-secondary); color: var(--fg); outline: none; }
 :root { --outline-active: #2f5fb3; }
 :root[data-theme="dark"] { --outline-active: #6b9cf0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --outline-active: #6b9cf0; } }
+@media (prefers-reduced-motion: reduce) { .page-outline ol, .po-text { transition: none; } }
 @media (max-width: 1180px), print { .page-outline { display: none; } }
+.page-title-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 4; height: 56px; padding: 0 64px 0 20px; display: flex; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 15px; cursor: pointer; transform: translateY(-100%); opacity: 0; transition: transform .2s ease, opacity .2s ease; }
+.page-title-bar span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.page-title-bar.shown { transform: none; opacity: 1; }
+.theme-toggle { z-index: 5; }
+@media (prefers-reduced-motion: reduce) { .page-title-bar { transition: none; } }
+@media print { .page-title-bar { display: none; } }
 .page-footer { max-width: 64rem; margin: 0 auto; padding: 18px 28px 32px; border-top: 1px solid var(--border); color: var(--fg-muted); font-size: 13px; text-align: center; }
 .page-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .page-footer a:hover { color: var(--fg); }
@@ -101,7 +109,7 @@ img { max-width: 100%; border-radius: 6px; }
 <ul class="pages-index">
 <li><a href="https://senaoz.github.io/md-viewer-pages/41df7aa5768f93c6d1b78add74675ef8.html">README</a><svg class="lock" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-label="Needs a password" role="img"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg><time datetime="2026-10-22">2026-10-22</time></li>
 </ul>
-<script type="application/json" id="md-viewer-index">[{"id":"41df7aa5768f93c6d1b78add74675ef8","title":"README","url":"https://senaoz.github.io/md-viewer-pages/41df7aa5768f93c6d1b78add74675ef8.html","locked":true,"at":1792650055409}]</script>
+<script type="application/json" id="md-viewer-index">[{"id":"41df7aa5768f93c6d1b78add74675ef8","title":"README","url":"https://senaoz.github.io/md-viewer-pages/41df7aa5768f93c6d1b78add74675ef8.html","locked":true,"at":1792651779332}]</script>
 </main>
 <footer class="page-footer">Published with <a href="https://github.com/oztalha/md-viewer">md-viewer</a></footer>
 <script>(() => {
@@ -154,7 +162,7 @@ img { max-width: 100%; border-radius: 6px; }
     const text = document.createElement("span");
     text.className = "po-text";
     text.textContent = h.textContent.trim();
-    text.style.paddingLeft = depth * 16 + "px";
+    text.style.setProperty("--po-indent", depth * 16 + "px");
     button.title = text.textContent;
     button.append(dash, text);
     button.addEventListener("click", () => h.scrollIntoView({ behavior: "smooth", block: "start" }));
@@ -176,6 +184,21 @@ img { max-width: 100%; border-radius: 6px; }
   };
   addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
   update();
+})();</script>
+<script>(() => {
+  const first = [...document.querySelectorAll("main > *")].find((el) => !el.classList.contains("frontmatter"));
+  if (!first || first.tagName !== "H1") return;
+  const bar = document.createElement("div");
+  bar.className = "page-title-bar";
+  bar.setAttribute("aria-hidden", "true");
+  const text = document.createElement("span");
+  text.textContent = first.textContent.trim();
+  bar.append(text);
+  bar.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+  document.body.append(bar);
+  new IntersectionObserver(([entry]) => {
+    bar.classList.toggle("shown", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+  }).observe(first);
 })();</script>
 </body>
 </html>
