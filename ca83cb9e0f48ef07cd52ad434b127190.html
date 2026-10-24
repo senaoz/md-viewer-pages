@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUMMARY</title>
+<meta name="md-viewer-publish" content="6ba49c50980c31066279c9514548e439">
+<script>try {
+  const t = localStorage.getItem("md-viewer-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch {}</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --fg: #1d1d1f; --fg-muted: #73737a; --bg: #fff; --bg-secondary: #f5f5f6;
+  --border: rgba(0,0,0,.1); --code-bg: rgba(0,0,0,.05); --accent: #8a6500;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark;
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: 64rem; margin: 0 auto; padding: 48px 28px 96px; }
+h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.3; letter-spacing: -.01em; margin: 1.4em 0 .5em; }
+h1 { font-size: 1.9em; letter-spacing: -.02em; } h2 { font-size: 1.5em; } h3 { font-size: 1.22em; }
+h1:first-child, h2:first-child { margin-top: 0; }
+p { margin: .7em 0; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em; background: var(--code-bg); padding: .15em .4em; border-radius: 4px; }
+pre { background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
+pre code { background: none; padding: 0; font-size: .85em; }
+blockquote { margin: .8em 0; padding: .1em 0 .1em 1em; border-left: 3px solid var(--fg-muted); color: var(--fg-muted); }
+ul, ol { padding-left: 1.5em; } li { margin: .25em 0; }
+/* Tables fill the text column and may grow past it up to 90rem (centered);
+   beyond the window they scroll inside themselves, never widening the page. */
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; width: max-content; min-width: 100%; max-width: min(90rem, calc(100vw - 32px)); position: relative; left: 50%; transform: translateX(-50%); }
+th, td { border: 1px solid var(--border); padding: 6px 12px; text-align: left; overflow-wrap: break-word; }
+th { background: var(--bg-secondary); font-weight: 600; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+img { max-width: 100%; border-radius: 6px; }
+.frontmatter { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; margin: 0 0 1.5em; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: .88em; }
+.frontmatter-row { display: contents; } .frontmatter-key { color: var(--fg-muted); font-weight: 500; }
+.markdown-alert { margin: .9em 0; padding: 2px 0 2px 14px; border-left: 3px solid var(--fg-muted); }
+.markdown-alert-title { display: flex; align-items: center; gap: 7px; font-weight: 600; margin: .2em 0 .4em; }
+.task-list-item { list-style: none; } ul.contains-task-list { padding-left: .4em; }
+/* shiki emits both themes' colors as --shiki-light / --shiki-dark. */
+.shiki, .shiki span { color: var(--shiki-light); }
+:root[data-theme="dark"] .shiki, :root[data-theme="dark"] .shiki span { color: var(--shiki-dark); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shiki, :root:not([data-theme="light"]) .shiki span { color: var(--shiki-dark); }
+}
+.theme-toggle {
+  position: fixed; top: 12px; right: 12px; width: 32px; height: 32px; padding: 0;
+  display: grid; place-items: center; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg); color: var(--fg-muted);
+}
+.theme-toggle:hover { color: var(--fg); background: var(--bg-secondary); }
+@media print { .theme-toggle { display: none; } }
+.page-outline { position: fixed; left: 16px; top: 96px; z-index: 5; max-height: calc(100vh - 128px); display: flex; }
+.page-outline ol { list-style: none; margin: 0; padding: 8px; border-radius: 12px; border: 1px solid transparent; overflow: hidden auto; scrollbar-width: none; transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.page-outline li { margin: 0; }
+.page-outline button { display: flex; align-items: center; width: 100%; padding: 4px 6px; border: 0; border-radius: 7px; background: none; color: var(--fg-muted); font: inherit; font-size: 14.5px; line-height: 1.45; text-align: left; cursor: pointer; }
+.po-dash { flex: none; height: 3px; border-radius: 2px; background: currentColor; opacity: .55; }
+/* The titles slide open: width, gap and indent grow from 0 (display can't animate). */
+.po-text { max-width: 0; margin-left: 0; padding-left: 0; opacity: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: max-width .22s ease, margin-left .22s ease, padding-left .22s ease, opacity .15s ease; }
+.page-outline button[aria-current="true"] { color: var(--fg); }
+.page-outline button[aria-current="true"] .po-dash { background: var(--outline-active); opacity: 1; }
+.page-outline:hover ol, .page-outline:focus-within ol { background: var(--bg); border-color: var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
+.page-outline:hover .po-text, .page-outline:focus-within .po-text { max-width: 300px; margin-left: 14px; padding-left: var(--po-indent); opacity: 1; }
+.page-outline:hover button:hover, .page-outline button:focus-visible { background: var(--bg-secondary); color: var(--fg); outline: none; }
+:root { --outline-active: #2f5fb3; }
+:root[data-theme="dark"] { --outline-active: #6b9cf0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --outline-active: #6b9cf0; } }
+@media (prefers-reduced-motion: reduce) { .page-outline ol, .po-text { transition: none; } }
+@media (max-width: 1180px), print { .page-outline { display: none; } }
+.page-title-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 4; height: 56px; padding: 0 64px 0 20px; display: flex; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 15px; cursor: pointer; transform: translateY(-100%); opacity: 0; transition: transform .2s ease, opacity .2s ease; }
+.page-title-bar span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.page-title-bar.shown { transform: none; opacity: 1; }
+.theme-toggle { z-index: 5; }
+@media (prefers-reduced-motion: reduce) { .page-title-bar { transition: none; } }
+@media print { .page-title-bar { display: none; } }
+.page-footer { max-width: 64rem; margin: 0 auto; padding: 18px 28px 32px; border-top: 1px solid var(--border); color: var(--fg-muted); font-size: 13px; text-align: center; }
+.page-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.page-footer a:hover { color: var(--fg); }
+@media print { .page-footer { display: none; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Does LLM reranking help scientific paper recommendation? An audit and a clean re-evaluation</h1>
+<p>Sena Öz · M.S. Software Engineering, Boğaziçi University · SWE 599 · October 2026</p>
+<p><img src="../../docs/figures/system_overview.svg" alt="System overview: v1 audit, v2 citation benchmark, local models, Phase 5, human-label evaluation and the deployed app"></p>
+<p><strong>Question.</strong> I built a recommender that suggests new papers from followed institutions to Boğaziçi researchers. Its design is embedding retrieval followed by reranking with a small local LLM (Llama 3.2 3B). Does the reranking step actually help?</p>
+<p><strong>v1 said yes; an audit showed it was an artifact.</strong> My first benchmark ranked each query paper's cited references among random distractors. It reported the LLM far ahead of embeddings (MRR 0.84 vs 0.51). Auditing my own code found nine problems (<a href="https://senaoz.github.io/md-viewer-pages/bae719ce4ea4b657634c0287de8b74ad.html">AUDIT.md</a>, F1–F9):</p>
+<ul>
+<li>candidates were always shown positives-first;</li>
+<li>the prompt's format example pointed at a positive;</li>
+<li>parse failures fell back to that order;</li>
+<li>a DataFrame label/position bug gave positive candidates <em>other papers' text</em>, which pushed every non-LLM method to chance;</li>
+<li>plus mis-normalized nDCG, unreproducible seeds, and a wrong pooling choice for SPECTER2.</li>
+</ul>
+<p><strong>v2: a controlled protocol.</strong></p>
+<ul>
+<li>Candidates are fetched by OpenAlex id with asserted identities and identical fields.</li>
+<li>Negatives are other papers' cited works, published before the query and sharing no author with it. There are two difficulty levels: random, and concept-matched.</li>
+<li>Candidates are shuffled per query and seed.</li>
+<li>Prompts are neutral, and every LLM call's status is logged.</li>
+<li>Settings were tuned on 50 dev queries and results are reported on 118 test queries.</li>
+<li>LLM methods run with 5 shuffle seeds. Statistics are bootstrap CIs and Holm-corrected Wilcoxon tests.</li>
+<li>All models are local: llama.cpp and sentence-transformers. 13 methods in total.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>R-precision % (test) [95% CI]</th>
+<th>random negatives</th>
+<th>concept-matched</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qwen3-Embedding-8B</td>
+<td><strong>87.0</strong> [84.2, 89.7]</td>
+<td><strong>80.1</strong> [77.0, 83.0]</td>
+</tr>
+<tr>
+<td>MiniLM (22M parameters)</td>
+<td>83.3</td>
+<td>75.7</td>
+</tr>
+<tr>
+<td>Llama 3.2 3B, pointwise</td>
+<td>78.8</td>
+<td>73.9</td>
+</tr>
+<tr>
+<td>Two-stage: Qwen3 → listwise Llama reranking</td>
+<td>74.0</td>
+<td>69.7</td>
+</tr>
+<tr>
+<td>Llama 3.2 3B, listwise (v1's "winner")</td>
+<td>43.9 [41.9, 46.0]</td>
+<td>42.0 [40.2, 43.9]</td>
+</tr>
+<tr>
+<td>Random ranking</td>
+<td>33.3</td>
+<td>33.3</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Findings</strong></p>
+<ol>
+<li><strong>The LLM's advantage was position bias.</strong> Changing nothing but candidate order, listwise Llama gets MRR 0.95–0.98 with positives first and 0.27–0.33 with positives last, below chance. On shuffled candidates it ranks last of 13 methods. It truncates 38% of its rankings.</li>
+<li><strong>Listwise reranking hurts the two-stage cascade.</strong> Stage 1 already keeps 89–93% of the cited references in its top 10, yet Llama reranking lowers R-precision by 10–13 points (p ≤ 3·10⁻¹⁰).</li>
+<li><strong>Small embedding models nearly match large ones.</strong> MiniLM is within 3.7 / 4.3 points of an 8B embedding model. Pointwise LLM scoring is the only LLM variant that beats lexical baselines.</li>
+<li><strong>The audit is reproducible.</strong> Every v1 number in the audit is reproduced by a script. The v2 benchmark runs as six notebooks (01–06) with sanity checks for each audit finding.</li>
+</ol>
+<p><strong>Phase 5: a realistic setting</strong> (notebooks 07–12). Each query is ranked against 11,967 papers instead of a pool of at most 42. A co-citation graph is built under explicit leakage rules, each with a unit test, a canary and an ablation (test, 118 queries):</p>
+<ul>
+<li><strong>Full-corpus retrieval is much harder.</strong> Qwen3-Embedding recall@100 is 64.0% [58.7, 69.4], BM25 38.7%, and R-precision falls from 87.0% to 25.1%.</li>
+<li><strong>Leakage-controlled co-citation expansion adds nothing significant:</strong> +0.8 recall@100 [−0.4, +2.1].
+<ul>
+<li>The canary (the query's own references added on purpose) gives +5.8.</li>
+<li>The rules catch real leaks, such as a 2012 record of a review with all 10 of a 2020 query's references, and year-only dates on 24% of citers.</li>
+</ul>
+</li>
+<li><strong>Second stage.</strong>
+<ul>
+<li>Pointwise Llama 3.2 3B halves nDCG@10 when used alone (0.340 → 0.175) and changes nothing when fused.</li>
+<li>Qwen3-Reranker-4B, a model trained for reranking, fused with the embedding score, raises R-precision 25.1 → 28.3 (Holm p = 0.040) and nDCG@10 0.340 → 0.360 (not significant after Holm).</li>
+</ul>
+</li>
+</ul>
+<p><strong>Human labels: the Stelmakh et al. gold standard</strong> (notebooks 14–18). 58 researchers rated their expertise (1–5) on 477 papers; each paper is scored against the researcher's own papers with max, as in the app. Metric: the authors' weighted Kendall-tau loss (lower is better, constant 0.5); our port reproduces all 11 published baselines (Table 3).</p>
+<ul>
+<li><strong>Same winner.</strong> Qwen3-Embedding-8B 0.222 [0.177, 0.274], SPECTER2 0.231, MiniLM 0.242, published o1-mini 0.245.</li>
+<li><strong>Bibliographic coupling</strong> (pre-registered: IDF-weighted cosine over OpenAlex references, max) is a real but weaker signal: 0.299 [0.248, 0.348], better than constant for 46 of 58 researchers (Holm p = 4.2·10⁻⁶).</li>
+<li><strong>It adds nothing significant to Qwen3-Embedding</strong> (fused 0.212 vs 0.222, Holm p = 1.0); only fusion with SPECTER2 is significant (0.197, Holm p = 8.3·10⁻³). Raising reference coverage from 80% to 85% changes no conclusion.</li>
+<li><strong>LLM reranking does not help</strong> (notebook 17; expertise-framed prompts). All worse than Qwen3-Embedding (Holm): Qwen3-Reranker-4B 0.268 (p = 9.4·10⁻³), BM25 0.275, TF-IDF 0.289, pointwise Llama 0.337, listwise Llama shuffled 0.467 (p = 1.6·10⁻⁷). Fusing the reranker with the embedding (post-hoc, notebook 18) gives 0.233: no gain over 0.222.</li>
+<li><strong>Position bias replicates on human labels.</strong> Listwise Llama: best-first 0.253, shuffled 0.467, worst-first 0.685 (best- vs worst-first Holm p = 1.4·10⁻⁵); 35% of shuffled answers repeat the shown order.</li>
+<li><strong>On Boğaziçi data</strong> (descriptive, no labels): 52 of 101 new papers with references share one with a Boğaziçi work, but coupling and the embedding mostly pick different researchers (22.9% overlap in the top 10).</li>
+</ul>
+<p><strong>Limitations.</strong></p>
+<ul>
+<li>Citation is a proxy for relevance, and the project collects no human judgments of its own. The public human labels (Stelmakh et al.) are CS/ML only and rank papers within one researcher, not researchers for one paper.</li>
+<li>Concept-matched negatives often share only a broad field label.</li>
+<li>One small general LLM (Llama 3.2 3B) and, in Phase 5, one trained reranker (Qwen3-Reranker-4B) were tested.</li>
+<li>Pretraining contamination could not be tested (one test query after Llama's cutoff; Qwen3-Reranker-4B postdates all queries).</li>
+<li>About 6% of OpenAlex abstracts are not real abstracts. Results are unchanged without them.</li>
+</ul>
+<p><strong>Next steps.</strong></p>
+<ul>
+<li><strong>Evaluation on the app's own task:</strong> for a new paper from a followed institution, which Boğaziçi researchers work on its topic. The Boğaziçi data were refetched and cleaned for this (<code>research/audit/BOUN_DATA.md</code>); no labelled benchmark covers ranking researchers for one paper, so cut-off and calibration rest on consistency checks and user feedback (<code>docs/MATCHING_DESIGN.md</code>, section 5).</li>
+<li><strong>The deployed system's feedback</strong> (thumbs-up/down per paper–researcher pair), related to offline scores when a database dump is available. No new human study is planned.</li>
+</ul>
+<p><em>Details:</em> <code>research/audit/BEFORE_AFTER.md</code> (v1 vs v2), <code>research/audit/AUDIT.md</code>, <code>research/audit/PHASE5_DESIGN.md</code>, <code>research/v2/</code> (notebooks, statistics, figures), <code>docs/DEVLOG.md</code> (dated log).</p>
+
+</main>
+<footer class="page-footer">Published with <a href="https://github.com/oztalha/md-viewer">md-viewer</a></footer>
+<script>(() => {
+  const root = document.documentElement;
+  const icons = {
+    auto: '<circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/>',
+    light: '<circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3"/>',
+    dark: '<path d="M13.5 9.5A5.5 5.5 0 1 1 6.5 2.5a4.5 4.5 0 0 0 7 7z"/>',
+  };
+  const labels = { auto: "Theme: match system", light: "Theme: light", dark: "Theme: dark" };
+  const next = { auto: "light", light: "dark", dark: "auto" };
+  const button = document.createElement("button");
+  button.className = "theme-toggle";
+  const render = () => {
+    const mode = root.dataset.theme || "auto";
+    button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' + icons[mode] + "</svg>";
+    button.title = labels[mode];
+    button.setAttribute("aria-label", labels[mode]);
+  };
+  button.addEventListener("click", () => {
+    const mode = next[root.dataset.theme || "auto"];
+    if (mode === "auto") delete root.dataset.theme;
+    else root.dataset.theme = mode;
+    try {
+      if (mode === "auto") localStorage.removeItem("md-viewer-theme");
+      else localStorage.setItem("md-viewer-theme", mode);
+    } catch {} // storage blocked: the choice lasts for this visit
+    render();
+  });
+  render();
+  document.body.appendChild(button);
+})();</script>
+<script>(() => {
+  const headings = [...document.querySelectorAll("main h1, main h2, main h3, main h4")];
+  if (headings.length < 2) return;
+  const top = Math.min(...headings.map((h) => +h.tagName[1]));
+  const widths = [28, 22, 16, 12];
+  const nav = document.createElement("nav");
+  nav.className = "page-outline";
+  nav.setAttribute("aria-label", "Outline");
+  const list = document.createElement("ol");
+  const buttons = headings.map((h) => {
+    const depth = +h.tagName[1] - top;
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    const dash = document.createElement("span");
+    dash.className = "po-dash";
+    dash.style.width = widths[depth] + "px";
+    dash.style.marginRight = (widths[0] - widths[depth]) + "px";
+    const text = document.createElement("span");
+    text.className = "po-text";
+    text.textContent = h.textContent.trim();
+    text.style.setProperty("--po-indent", depth * 16 + "px");
+    button.title = text.textContent;
+    button.append(dash, text);
+    button.addEventListener("click", () => h.scrollIntoView({ behavior: "smooth", block: "start" }));
+    item.append(button);
+    list.append(item);
+    return button;
+  });
+  nav.append(list);
+  document.body.append(nav);
+  // The current section: the last heading scrolled past the top (the first
+  // before any), or the last one once the page is scrolled to the end.
+  let queued = false;
+  const update = () => {
+    queued = false;
+    let current = 0;
+    headings.forEach((h, i) => { if (h.getBoundingClientRect().top <= 96) current = i; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) current = headings.length - 1;
+    buttons.forEach((b, i) => b.setAttribute("aria-current", String(i === current)));
+  };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();</script>
+<script>(() => {
+  const first = [...document.querySelectorAll("main > *")].find((el) => !el.classList.contains("frontmatter"));
+  if (!first || first.tagName !== "H1") return;
+  const bar = document.createElement("div");
+  bar.className = "page-title-bar";
+  bar.setAttribute("aria-hidden", "true");
+  const text = document.createElement("span");
+  text.textContent = first.textContent.trim();
+  bar.append(text);
+  bar.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+  document.body.append(bar);
+  new IntersectionObserver(([entry]) => {
+    bar.classList.toggle("shown", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+  }).observe(first);
+})();</script>
+</body>
+</html>
