@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUDIT</title>
+<meta name="md-viewer-publish" content="f9519d4f6f324eb75e96b67b602bc413">
+<script>try {
+  const t = localStorage.getItem("md-viewer-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch {}</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --fg: #1d1d1f; --fg-muted: #73737a; --bg: #fff; --bg-secondary: #f5f5f6;
+  --border: rgba(0,0,0,.1); --code-bg: rgba(0,0,0,.05); --accent: #8a6500;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark;
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: 64rem; margin: 0 auto; padding: 48px 28px 96px; }
+h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.3; letter-spacing: -.01em; margin: 1.4em 0 .5em; }
+h1 { font-size: 1.9em; letter-spacing: -.02em; } h2 { font-size: 1.5em; } h3 { font-size: 1.22em; }
+h1:first-child, h2:first-child { margin-top: 0; }
+p { margin: .7em 0; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em; background: var(--code-bg); padding: .15em .4em; border-radius: 4px; }
+pre { background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
+pre code { background: none; padding: 0; font-size: .85em; }
+blockquote { margin: .8em 0; padding: .1em 0 .1em 1em; border-left: 3px solid var(--fg-muted); color: var(--fg-muted); }
+ul, ol { padding-left: 1.5em; } li { margin: .25em 0; }
+/* Tables fill the text column and may grow past it up to 90rem (centered);
+   beyond the window they scroll inside themselves, never widening the page. */
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; width: max-content; min-width: 100%; max-width: min(90rem, calc(100vw - 32px)); position: relative; left: 50%; transform: translateX(-50%); }
+th, td { border: 1px solid var(--border); padding: 6px 12px; text-align: left; overflow-wrap: break-word; }
+th { background: var(--bg-secondary); font-weight: 600; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+img { max-width: 100%; border-radius: 6px; }
+.frontmatter { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; margin: 0 0 1.5em; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: .88em; }
+.frontmatter-row { display: contents; } .frontmatter-key { color: var(--fg-muted); font-weight: 500; }
+.markdown-alert { margin: .9em 0; padding: 2px 0 2px 14px; border-left: 3px solid var(--fg-muted); }
+.markdown-alert-title { display: flex; align-items: center; gap: 7px; font-weight: 600; margin: .2em 0 .4em; }
+.task-list-item { list-style: none; } ul.contains-task-list { padding-left: .4em; }
+/* shiki emits both themes' colors as --shiki-light / --shiki-dark. */
+.shiki, .shiki span { color: var(--shiki-light); }
+:root[data-theme="dark"] .shiki, :root[data-theme="dark"] .shiki span { color: var(--shiki-dark); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shiki, :root:not([data-theme="light"]) .shiki span { color: var(--shiki-dark); }
+}
+.theme-toggle {
+  position: fixed; top: 12px; right: 12px; width: 32px; height: 32px; padding: 0;
+  display: grid; place-items: center; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg); color: var(--fg-muted);
+}
+.theme-toggle:hover { color: var(--fg); background: var(--bg-secondary); }
+@media print { .theme-toggle { display: none; } }
+.page-outline { position: fixed; left: 16px; top: 96px; z-index: 5; max-height: calc(100vh - 128px); display: flex; }
+.page-outline ol { list-style: none; margin: 0; padding: 8px; border-radius: 12px; border: 1px solid transparent; overflow: hidden auto; scrollbar-width: none; transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.page-outline li { margin: 0; }
+.page-outline button { display: flex; align-items: center; width: 100%; padding: 4px 6px; border: 0; border-radius: 7px; background: none; color: var(--fg-muted); font: inherit; font-size: 14.5px; line-height: 1.45; text-align: left; cursor: pointer; }
+.po-dash { flex: none; height: 3px; border-radius: 2px; background: currentColor; opacity: .55; }
+/* The titles slide open: width, gap and indent grow from 0 (display can't animate). */
+.po-text { max-width: 0; margin-left: 0; padding-left: 0; opacity: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: max-width .22s ease, margin-left .22s ease, padding-left .22s ease, opacity .15s ease; }
+.page-outline button[aria-current="true"] { color: var(--fg); }
+.page-outline button[aria-current="true"] .po-dash { background: var(--outline-active); opacity: 1; }
+.page-outline:hover ol, .page-outline:focus-within ol { background: var(--bg); border-color: var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
+.page-outline:hover .po-text, .page-outline:focus-within .po-text { max-width: 300px; margin-left: 14px; padding-left: var(--po-indent); opacity: 1; }
+.page-outline:hover button:hover, .page-outline button:focus-visible { background: var(--bg-secondary); color: var(--fg); outline: none; }
+:root { --outline-active: #2f5fb3; }
+:root[data-theme="dark"] { --outline-active: #6b9cf0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --outline-active: #6b9cf0; } }
+@media (prefers-reduced-motion: reduce) { .page-outline ol, .po-text { transition: none; } }
+@media (max-width: 1180px), print { .page-outline { display: none; } }
+.page-title-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 4; height: 56px; padding: 0 64px 0 20px; display: flex; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 15px; cursor: pointer; transform: translateY(-100%); opacity: 0; transition: transform .2s ease, opacity .2s ease; }
+.page-title-bar span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.page-title-bar.shown { transform: none; opacity: 1; }
+.theme-toggle { z-index: 5; }
+@media (prefers-reduced-motion: reduce) { .page-title-bar { transition: none; } }
+@media print { .page-title-bar { display: none; } }
+.page-footer { max-width: 64rem; margin: 0 auto; padding: 18px 28px 32px; border-top: 1px solid var(--border); color: var(--fg-muted); font-size: 13px; text-align: center; }
+.page-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.page-footer a:hover { color: var(--fg); }
+@media print { .page-footer { display: none; } }
+</style>
+</head>
+<body>
+<main>
+<h1>v1 evaluation audit</h1>
+<p>Scope: the cited-paper ranking benchmark in <code>research/v1/03_cited_paper_ranking.ipynb</code>. Results are frozen in <code>research/v1/results/</code> (originally <code>research/eval_dataset/week3/</code>; git tag <code>v1-results</code>, commit <code>614cfb2</code>). Every number below is reproduced by:</p>
+<pre><code>python research/audit/verify_v1.py
+</code></pre>
+<h2>What could and could not be checked</h2>
+<p>The v1 intermediate caches are no longer available: <code>eval_sets.pkl</code>, <code>rankings.pkl</code>, <code>priority_followed.pkl</code> and <code>openalex_reference_works_raw.pkl</code>. <code>research/data/cleaned/boun.csv</code> is a different corpus; none of the 174 query papers or their 1,811 reference slots (1,729 distinct works) are in it. So the audit uses two sources:</p>
+<ul>
+<li><strong>Code.</strong> The notebook source, <code>src/</code>, and the cell outputs saved in <code>v1/03_cited_paper_ranking_out.ipynb</code> and <code>v1/01_fetch_and_preprocessing.ipynb</code>.</li>
+<li><strong>Saved rankings.</strong> <code>rankings_*.json</code>, covering 100 queries. Each file stores only the <strong>top-n_positives</strong> candidate indices per query. In v1, candidate index <code>&lt; n_positives</code> means positive.</li>
+</ul>
+<p>Not checkable without the caches:</p>
+<ul>
+<li>per-query counts of positives vs negatives with a non-empty <code>concepts_array</code></li>
+<li>per-query confirmation of F6</li>
+<li>stage-1 recall@k for k &gt; n</li>
+</ul>
+<h2>Summary</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Finding</th>
+<th>Status</th>
+<th>Affects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1</td>
+<td>Candidates are passed in <code>positives + negatives</code> order</td>
+<td>Confirmed (code)</td>
+<td>Every LLM method</td>
+</tr>
+<tr>
+<td>F2</td>
+<td>The prompt example <code>[3, 1, 7, ...]</code> points at a positive</td>
+<td>Confirmed (data)</td>
+<td>Every LLM method</td>
+</tr>
+<tr>
+<td>F3</td>
+<td>A parse/HTTP failure returns the original order, so positives come first</td>
+<td>Confirmed (data)</td>
+<td>Llama, two-stage</td>
+</tr>
+<tr>
+<td>F4</td>
+<td>Negatives have no <code>concepts_array</code>; the LLM sees title + concepts</td>
+<td>Confirmed (code); counts not checkable</td>
+<td>Every LLM method</td>
+</tr>
+<tr>
+<td>F5</td>
+<td>"Stage-1 recall loss" does not explain the two-stage drop</td>
+<td>Confirmed (data)</td>
+<td>Two-stage claim</td>
+</tr>
+<tr>
+<td>F6</td>
+<td><strong>Positive candidates were given the text of other papers</strong></td>
+<td>Confirmed (code), consistent with data; per-query not checkable</td>
+<td><strong>Every method</strong></td>
+</tr>
+<tr>
+<td>F7</td>
+<td><code>ndcg_at_n</code> is normalized by its own hits</td>
+<td>Confirmed (code)</td>
+<td>Every nDCG number</td>
+</tr>
+<tr>
+<td>F8</td>
+<td>Negative sampling seed uses the per-process salted <code>hash()</code></td>
+<td>Confirmed (code)</td>
+<td>Reproducibility</td>
+</tr>
+<tr>
+<td>F9</td>
+<td>SPECTER2 encoded with mean pooling instead of its [CLS] token</td>
+<td>Confirmed (code), found 2026-10-12</td>
+<td>SPECTER2</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Net:</strong> F6 means that, as far as the code shows, v1 measured rankings of mislabeled text for every method. F1–F4 then explain why the LLM still scored high: its signal came from candidate position and field presence, not from content. The v1 headline numbers should not be cited.</p>
+<h2>Reference values</h2>
+<ul>
+<li>The pool is n positives + 2n negatives. The JSON files don't store pool size, so 3n is assumed.</li>
+<li>Chance MRR is the exact expectation under a random ranking: <strong>0.556</strong>.</li>
+<li>Chance R-precision (the share of the top n that are positives) is <strong>33.3%</strong>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>MRR</th>
+<th>R-prec %</th>
+<th>top-1 = idx 0</th>
+<th>top-1 = idx 1</th>
+<th>top-1 = idx 2</th>
+<th>All-zero (fallback)</th>
+<th>Negatives in top-n: mean relative position</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Llama 3.2 3B (listwise)</td>
+<td>0.841</td>
+<td>45.0</td>
+<td>18</td>
+<td>4</td>
+<td><strong>33</strong></td>
+<td><strong>3</strong></td>
+<td><strong>0.456</strong></td>
+</tr>
+<tr>
+<td>Qwen3 → Llama</td>
+<td>0.589</td>
+<td>37.0</td>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>3</td>
+<td>0.497</td>
+</tr>
+<tr>
+<td>TF-IDF</td>
+<td>0.536</td>
+<td>33.4</td>
+<td>3</td>
+<td>4</td>
+<td>3</td>
+<td>0</td>
+<td>0.500</td>
+</tr>
+<tr>
+<td>MiniLM</td>
+<td>0.536</td>
+<td>35.9</td>
+<td>1</td>
+<td>3</td>
+<td>7</td>
+<td>0</td>
+<td>0.488</td>
+</tr>
+<tr>
+<td>Qwen3 + MiniLM</td>
+<td>0.526</td>
+<td>37.2</td>
+<td>2</td>
+<td>2</td>
+<td>5</td>
+<td>0</td>
+<td>0.483</td>
+</tr>
+<tr>
+<td>Llama + MiniLM</td>
+<td>0.522</td>
+<td>34.5</td>
+<td>1</td>
+<td>1</td>
+<td>8</td>
+<td>0</td>
+<td>0.495</td>
+</tr>
+<tr>
+<td>Qwen3</td>
+<td>0.513</td>
+<td>37.4</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+<td>0</td>
+<td>0.502</td>
+</tr>
+<tr>
+<td>EmbeddingGemma</td>
+<td>0.471</td>
+<td>34.0</td>
+<td>2</td>
+<td>1</td>
+<td>8</td>
+<td>0</td>
+<td>0.496</td>
+</tr>
+<tr>
+<td>SPECTER2</td>
+<td>0.465</td>
+<td>30.2</td>
+<td>3</td>
+<td>1</td>
+<td>5</td>
+<td>0</td>
+<td>0.494</td>
+</tr>
+<tr>
+<td>BM25</td>
+<td>0.410</td>
+<td>23.1</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>0.492</td>
+</tr>
+</tbody>
+</table>
+<p>The last column covers the negatives that a method placed in its top n. It gives where each sat within the original negative block: 0 = first negative, 1 = last. Random gives ≈ 0.5. Llama is the only method visibly skewed toward earlier negatives (0.456), which is consistent with position bias.</p>
+<h2>F1 — Candidate order leak (confirmed, code)</h2>
+<p>Notebook cell 19:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">candidates </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> ev[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'positives'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">+</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> ev[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'negatives'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">positive_indices </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> set</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">range</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">len</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(ev[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'positives'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">])))</span></span>
+<span class="line"></span></code></pre>
+<p>Nothing shuffles the candidates. The LLM prompt numbers them <code>1..N</code> in this order, so the positives are always candidates <code>1..n</code>.</p>
+<h2>F2 — Prompt example leak (confirmed, data)</h2>
+<p><code>src/similarity.py:288</code> (and the Gemini copy at <code>:220</code>):</p>
+<pre><code>Respond ONLY with a JSON array of candidate numbers, e.g.: [3, 1, 7, ...]
+</code></pre>
+<p>Candidate number 3 is index 2. Because the minimum n is 3, index 2 is always a positive.</p>
+<ul>
+<li>Llama ranks index 2 first in <strong>33/100</strong> queries, and index 0 in 18/100.</li>
+<li>Other methods put index 2 first in 2–8/100 queries.</li>
+<li>The review's "~1–2%" figure for the other methods is too low; the measured range is 2–8%.</li>
+</ul>
+<h2>F3 — Fallback leak (confirmed, data)</h2>
+<p><code>src/similarity.py:312-318</code>: unranked candidates are appended in original order, and on any exception the function returns <code>[(i, 0.0) for i in range(n)]</code>.</p>
+<ul>
+<li><strong>Llama.</strong> 3 queries hit the full fallback (W3081158114, W4220920296, W3037480398). All 3 return identity order and score MRR 1.0 by construction. Llama's MRR without them is 0.836, versus 0.841 with them. The fallback is a small part of Llama's lead.</li>
+<li><strong>Qwen3 → Llama.</strong> 3 <em>different</em> queries fall back (W3018157127, W3128019209, W3014721972). There, the fallback returns the stage-1 order with zero scores.</li>
+<li><strong>Cause.</strong> The saved notebook output shows repeated <code>403 Client Error: Forbidden</code> from <code>localhost:11434/api/chat</code> in a later run. The origin header likely needs fixing before any v2 run. <em>(Moot: v2 dropped Ollama for llama-server; see <code>docs/DEVLOG.md</code>, 2026-10-11/12.)</em></li>
+</ul>
+<h2>F4 — Field asymmetry (confirmed from code; counts not checkable)</h2>
+<p>Cell 11 builds positives with <code>'concepts_array': row['concepts_array']</code>. The negatives dict has the keys <code>id, title, abstract, text, source</code> and <strong>no <code>concepts_array</code></strong>.</p>
+<p>Every LLM method builds its input as:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">' '</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.join(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">filter</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">None</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, [c.get(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'title'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">''</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">), </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">' '</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">.join(c.get(</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'concepts_array'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">, []))]))</span></span>
+<span class="line"></span></code></pre>
+<p>So in <code>llama</code>, <code>llama+minilm</code>, <code>qwen→llama</code> and <code>gemini</code>:</p>
+<ul>
+<li><strong>negatives were always title-only</strong></li>
+<li><strong>positives were title + concept tags</strong> whenever their <code>concepts_array</code> was non-empty</li>
+</ul>
+<p>A model can separate the two groups by format alone. Embedding and lexical methods use <code>c['text']</code> for both groups and are not affected by F4. The per-query counts the audit plan asked for need <code>eval_sets.pkl</code>, so they are <strong>not checkable</strong>.</p>
+<h2>F5 — Two-stage drop is not stage-1 recall loss (confirmed, data)</h2>
+<p>Stage 1 keeps the top 20. For the 25 queries with n ≤ 6, the pool is 3n ≤ 20, so stage 1 drops <strong>nothing</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Subset</th>
+<th>Llama (full pool)</th>
+<th>Qwen3 → Llama</th>
+<th>Qwen3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pool ≤ 20 (25 queries)</td>
+<td>0.840</td>
+<td><strong>0.526</strong></td>
+<td>0.580</td>
+</tr>
+<tr>
+<td>Pool &gt; 20 (75 queries)</td>
+<td>0.842</td>
+<td>0.609</td>
+<td>0.490</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Small pools.</strong> Recall loss is zero, yet the cascade scores <em>below Qwen3 alone</em> and 0.31 below full-pool Llama. The difference is the input order: stage 1 re-sorts candidates by Qwen3 score, which removes the positives-first order (F1/F2). The F4 asymmetry survives the cascade.</li>
+<li><strong>Stage-1 recall@k.</strong> It can't be computed from the saved files, because they store only the top n.</li>
+</ul>
+<h2>F6 — Positive candidates carry another paper's text (confirmed from code)</h2>
+<p>The chain in <code>v1/03_cited_paper_ranking.ipynb</code>, cells 6 and 12:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">extended_followed_df </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> pd.concat([followed_df, fetched_works_df])           </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D"># keeps original index labels</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">id_to_idx </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> {row[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'id'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]: i </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> i, row </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> extended_followed_df.iterrows()}   </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D"># id -&gt; index *label*</span></span>
+<span class="line"><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">...</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">row </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> extended_followed_df.iloc[id_to_idx[ref_id]]                          </span><span style="--shiki-light:#6A737D;--shiki-dark:#6A737D"># used as a *position*</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">positives.append({</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'id'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: ref_id, </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'title'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: row[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'title'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">], </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'text'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: row[</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'text'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">], </span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF">'concepts_array'</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">})</span></span>
+<span class="line"></span></code></pre>
+<p>Both frames were produced by <code>src/preprocessing.process_papers</code>. That function sorts by <code>publication_year</code>, filters rows, and never resets the index. The saved output in <code>v1/01_fetch_and_preprocessing.ipynb</code> confirms both frames went through it: the corpus went from 10,000 to 9,946 rows and the fetched references from 1,532 to 1,522.</p>
+<p>Consequences:</p>
+<ul>
+<li><strong>Fetched references.</strong> The fetched set (1,522 papers) has labels 0..1531. <code>iloc</code> on those labels returns rows of <code>followed_df</code>, i.e. <strong>unrelated corpus papers</strong>. The <code>id</code> stored on the positive is still the correct reference id, so nothing downstream would flag it. The corpus covers papers published since 2020 and references skew older, so most positives come from this fetched set.</li>
+<li><strong>In-corpus references.</strong> These are misaligned too, by however far the sort and filter moved each row. One caveat: <code>process_papers</code> as committed (<code>df['language'] == 'en' or ...</code>) would raise on a Series, so the version that actually ran differs slightly from the repo.</li>
+<li><strong>Text field.</strong> <code>build_text</code> was applied only to <code>followed_df</code>, so fetched rows never had a <code>text</code> field at all.</li>
+</ul>
+<p>The saved scores are consistent with positives carrying no relevant content:</p>
+<ul>
+<li><strong>Chance level.</strong> Every non-LLM method is at or below chance. MRR is 0.410–0.536 against a chance level of 0.556. R-precision is 23.1–37.4% against 33.3%.</li>
+<li><strong>Below chance.</strong> BM25's R-precision of 23.1% (95% CI 20.8–25.4, <code>v1/stats/results.md</code>) is <em>below</em> chance with a CI that excludes it. An uninformative method can only do that if positives are systematically disadvantaged, for example through empty or short text.</li>
+<li><strong>The LLM.</strong> Llama's 0.841 can then only come from F1–F4.</li>
+</ul>
+<p><strong>Not checkable per query</strong> without <code>eval_sets.pkl</code>. v2 must assert <code>positive['id'] == source_row['id']</code> on every candidate.</p>
+<h2>F7 — nDCG normalization (confirmed, code)</h2>
+<p><code>src/metrics.py:120-121</code>:</p>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">top_n_hits </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> [</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">ideal_hits </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF"> sorted</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">(top_n_hits, </span><span style="--shiki-light:#E36209;--shiki-dark:#FFAB70">reverse</span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF">True</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span></code></pre>
+<p>The ideal DCG is built from the hits <em>the method retrieved</em>, not from <code>min(n, |positives|)</code> relevant items. A ranking with a single positive at rank 1 therefore scores nDCG 1.0. All v1 nDCG columns are mis-normalized.</p>
+<h2>F8 — Non-reproducible negatives (confirmed, code)</h2>
+<p>Cell 11: <code>neg_pool.sample(..., random_state=hash(pi_id) % (2**31))</code>. Python salts <code>str.__hash__</code> per process (<code>PYTHONHASHSEED</code>), so the v1 negative pools cannot be regenerated even with the original corpus.</p>
+<p>As a result, v2 rebuilds the pools for the same 174 queries. v1 → v2 is <strong>not a paired re-run</strong>.</p>
+<h2>F9 — SPECTER2 pooling (confirmed, code; found 2026-10-12)</h2>
+<p><code>src/similarity.py::_get_model</code> loaded every model with <code>SentenceTransformer(name)</code>. <code>allenai/specter2_base</code> ships as a plain transformers checkpoint with no sentence-transformers pooling config, so this call silently added <strong>mean</strong> pooling. SPECTER2 is trained and documented with the <strong>[CLS]</strong> token embedding, so v1's SPECTER2 numbers understate the model.</p>
+<p>Fixed in v2. The output now matches a manual <code>last_hidden_state[:, 0]</code> to within 2e-6.</p>
+<p>A related issue was found in v2's first EmbeddingGemma setup: its GGUF lacked the two Dense projection layers that follow pooling in the released model. Vectors from it correlated about 0.00 with the reference sentence-transformers output. v2 now runs the full model in-process.</p>
+<p>Whether v1's Ollama <code>embeddinggemma</code> included these layers was <strong>not checked</strong>: Ollama served it, and that model is no longer installed.</p>
+<h2>Out of scope</h2>
+<p><code>backend/services/matching.py</code> has its own stage-2 LLM reranker. It does not import <code>ollama_rank_candidates</code> and was not audited. It uses <code>src.similarity</code> only for model maps.</p>
+
+</main>
+<footer class="page-footer">Published with <a href="https://github.com/oztalha/md-viewer">md-viewer</a></footer>
+<script>(() => {
+  const root = document.documentElement;
+  const icons = {
+    auto: '<circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/>',
+    light: '<circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3"/>',
+    dark: '<path d="M13.5 9.5A5.5 5.5 0 1 1 6.5 2.5a4.5 4.5 0 0 0 7 7z"/>',
+  };
+  const labels = { auto: "Theme: match system", light: "Theme: light", dark: "Theme: dark" };
+  const next = { auto: "light", light: "dark", dark: "auto" };
+  const button = document.createElement("button");
+  button.className = "theme-toggle";
+  const render = () => {
+    const mode = root.dataset.theme || "auto";
+    button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' + icons[mode] + "</svg>";
+    button.title = labels[mode];
+    button.setAttribute("aria-label", labels[mode]);
+  };
+  button.addEventListener("click", () => {
+    const mode = next[root.dataset.theme || "auto"];
+    if (mode === "auto") delete root.dataset.theme;
+    else root.dataset.theme = mode;
+    try {
+      if (mode === "auto") localStorage.removeItem("md-viewer-theme");
+      else localStorage.setItem("md-viewer-theme", mode);
+    } catch {} // storage blocked: the choice lasts for this visit
+    render();
+  });
+  render();
+  document.body.appendChild(button);
+})();</script>
+<script>(() => {
+  const headings = [...document.querySelectorAll("main h1, main h2, main h3, main h4")];
+  if (headings.length < 2) return;
+  const top = Math.min(...headings.map((h) => +h.tagName[1]));
+  const widths = [28, 22, 16, 12];
+  const nav = document.createElement("nav");
+  nav.className = "page-outline";
+  nav.setAttribute("aria-label", "Outline");
+  const list = document.createElement("ol");
+  const buttons = headings.map((h) => {
+    const depth = +h.tagName[1] - top;
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    const dash = document.createElement("span");
+    dash.className = "po-dash";
+    dash.style.width = widths[depth] + "px";
+    dash.style.marginRight = (widths[0] - widths[depth]) + "px";
+    const text = document.createElement("span");
+    text.className = "po-text";
+    text.textContent = h.textContent.trim();
+    text.style.setProperty("--po-indent", depth * 16 + "px");
+    button.title = text.textContent;
+    button.append(dash, text);
+    button.addEventListener("click", () => h.scrollIntoView({ behavior: "smooth", block: "start" }));
+    item.append(button);
+    list.append(item);
+    return button;
+  });
+  nav.append(list);
+  document.body.append(nav);
+  // The current section: the last heading scrolled past the top (the first
+  // before any), or the last one once the page is scrolled to the end.
+  let queued = false;
+  const update = () => {
+    queued = false;
+    let current = 0;
+    headings.forEach((h, i) => { if (h.getBoundingClientRect().top <= 96) current = i; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) current = headings.length - 1;
+    buttons.forEach((b, i) => b.setAttribute("aria-current", String(i === current)));
+  };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();</script>
+<script>(() => {
+  const first = [...document.querySelectorAll("main > *")].find((el) => !el.classList.contains("frontmatter"));
+  if (!first || first.tagName !== "H1") return;
+  const bar = document.createElement("div");
+  bar.className = "page-title-bar";
+  bar.setAttribute("aria-hidden", "true");
+  const text = document.createElement("span");
+  text.textContent = first.textContent.trim();
+  bar.append(text);
+  bar.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+  document.body.append(bar);
+  new IntersectionObserver(([entry]) => {
+    bar.classList.toggle("shown", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+  }).observe(first);
+})();</script>
+</body>
+</html>
