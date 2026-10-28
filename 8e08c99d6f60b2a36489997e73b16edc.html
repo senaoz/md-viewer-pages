@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>moodle-performance-report</title>
-<meta name="md-viewer-publish" content="c969fe751c6a132f23d66082d315a7eb">
+<meta name="md-viewer-publish" content="00368df6f9357b1053a111281cb7454a">
 <script>try {
   const t = localStorage.getItem("md-viewer-theme");
   if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
@@ -128,6 +128,7 @@ img { max-width: 100%; border-radius: 6px; }
 <li><strong>Oversized files.</strong> A 3.3 MB animated loading GIF, banner images of about 4 MB each, and a 1.2 MB JavaScript bundle add significant load time, especially on slower connections.</li>
 </ol>
 <p>Server resources are not the bottleneck. The slowness is mainly a combination of network distance, number of uncached requests and file size.</p>
+<p><strong>Update (28 Oct):</strong> A Cloudflare Cache Rule for Moodle's versioned theme/JS files has been applied and verified (see Section 6). The remaining recommendations are pending.</p>
 <h2>2. Traffic Overview</h2>
 <h3>2.1 Requests by country</h3>
 <table>
@@ -298,8 +299,8 @@ img { max-width: 100%; border-radius: 6px; }
 <tbody>
 <tr>
 <td>Cache Rules</td>
-<td>None configured</td>
-<td>Theme CSS/JS combo files are always fetched from the origin</td>
+<td>None configured at the time of analysis</td>
+<td>Theme CSS/JS combo files were always fetched from the origin. <strong>Resolved 28 Oct</strong> (Section 6).</td>
 </tr>
 <tr>
 <td>0-RTT Connection Resumption</td>
@@ -347,6 +348,7 @@ img { max-width: 100%; border-radius: 6px; }
 <th>Action</th>
 <th>Expected impact</th>
 <th>Effort</th>
+<th>Status</th>
 </tr>
 </thead>
 <tbody>
@@ -355,39 +357,46 @@ img { max-width: 100%; border-radius: 6px; }
 <td>Remove or replace the 3.3 MB loading GIF (RemUI → Site loader settings) with a CSS spinner or an SVG under 20 KB</td>
 <td>High: removes 3.3 MB from every first visit</td>
 <td>Low</td>
+<td>Pending</td>
 </tr>
 <tr>
 <td>2</td>
 <td>Add a Cloudflare Cache Rule for Moodle's versioned theme/JS endpoints (see 5.1)</td>
 <td>High: CSS/JS served from the nearest Cloudflare location instead of Frankfurt</td>
 <td>Low</td>
+<td><strong>Done (28 Oct)</strong></td>
 </tr>
 <tr>
 <td>3</td>
 <td>Re-export the "Copia de Banners" images as WebP/JPEG (~100–200 KB each) and replace them in the course sections</td>
 <td>Medium–High on affected course pages</td>
 <td>Low–Medium</td>
+<td>Pending</td>
 </tr>
 <tr>
 <td>4</td>
 <td>Enable 0-RTT and Early Hints (Cloudflare → Speed → Optimization)</td>
 <td>Low–Medium</td>
 <td>Low</td>
+<td>Pending</td>
 </tr>
 <tr>
 <td>5</td>
 <td>Reduce theme payload: review enabled RemUI features and custom SCSS, and remove the <code>pdf.js</code> script loaded on every page</td>
 <td>Medium</td>
 <td>Medium</td>
+<td>Pending</td>
 </tr>
 <tr>
 <td>6</td>
 <td>Evaluate Argo Smart Routing or the Pro plan only if items 1–5 are insufficient</td>
 <td>Uncertain: does not guarantee routing to Istanbul</td>
 <td>Cost</td>
+<td>On hold</td>
 </tr>
 </tbody>
 </table>
+<p>Items 1, 2, 4 and the <code>pdf.js</code> part of item 5 can be done in-house: the team has admin access to both the Moodle server and the Cloudflare zone. Item 3 also needs sign-off from the course owners, and the rest of item 5 needs a decision on which RemUI features are in use.</p>
 <h3>5.1 Proposed Cache Rule</h3>
 <ul>
 <li><strong>Name:</strong> Moodle revisioned theme/JS assets</li>
@@ -407,11 +416,66 @@ img { max-width: 100%; border-radius: 6px; }
 <li><strong>Cache key:</strong> Default; the query string is kept, which <code>yui_combo.php</code> requires</li>
 </ul>
 <p><strong>Rationale.</strong> These URLs contain Moodle's theme/JavaScript revision number, and Moodle already marks them as <code>public, immutable</code> with a 90-day lifetime. When caches are purged in Moodle, the revision number and therefore the URLs change, so stale content cannot be served.</p>
-<p><strong>Status:</strong> Prepared. It will be applied once an API token with Cache Rules edit permission is available.</p>
-<h2>6. Next Steps</h2>
+<p><strong>Status:</strong> Applied on 28 October 2026.</p>
+<h2>6. Actions Taken</h2>
+<h3>6.1 Cache Rule applied (28 Oct 2026)</h3>
+<p>The rule described in 5.1 was added to the zone (<code>http_request_cache_settings</code> phase, rule "Moodle revisioned theme/JS assets").</p>
+<p>Verification: each URL was requested repeatedly and the <code>cf-cache-status</code> header was checked.</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Before</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/theme/styles.php/remui/…/all</code> (theme CSS)</td>
+<td>DYNAMIC</td>
+<td><strong>HIT</strong></td>
+</tr>
+<tr>
+<td><code>/theme/yui_combo.php?…yui-moodlesimple.js</code></td>
+<td>DYNAMIC</td>
+<td><strong>HIT</strong></td>
+</tr>
+<tr>
+<td><code>/theme/yui_combo.php?…yui-moodlesimple.css</code></td>
+<td>DYNAMIC</td>
+<td><strong>HIT</strong></td>
+</tr>
+<tr>
+<td><code>/lib/javascript.php/…/require.min.js</code></td>
+<td>HIT</td>
+<td>HIT</td>
+</tr>
+<tr>
+<td><code>/lib/requirejs.php/…/core/first.js</code></td>
+<td>HIT</td>
+<td>HIT</td>
+</tr>
+<tr>
+<td><code>/theme/font.php/…/Inter.ttf</code></td>
+<td>HIT</td>
+<td>HIT</td>
+</tr>
+<tr>
+<td><code>/login/index.php</code> (dynamic page, control)</td>
+<td>DYNAMIC</td>
+<td>DYNAMIC (unchanged, as intended)</td>
+</tr>
+</tbody>
+</table>
+<p>The theme CSS (2.2 MB uncompressed) and the YUI JavaScript combo files are now served from the nearest Cloudflare location instead of the Frankfurt origin. Dynamic Moodle pages are not affected.</p>
+<p><strong>Rollback:</strong> Cloudflare → Caching → Cache Rules → disable or delete "Moodle revisioned theme/JS assets".</p>
+<h2>7. Next Steps</h2>
 <ol>
-<li>Implement recommendations 1–4.</li>
-<li>Re-measure page load times after implementation and compare them against the current baseline.</li>
+<li>Replace the loading GIF (recommendation 1).</li>
+<li>Enable 0-RTT and Early Hints (recommendation 4).</li>
+<li>Locate and remove the <code>pdf.js</code> script loaded on every page (recommendation 5).</li>
+<li>Plan the banner image replacement with course owners (recommendation 3).</li>
+<li>Re-measure page load times and compare them against the current baseline.</li>
 </ol>
 
 </main>
