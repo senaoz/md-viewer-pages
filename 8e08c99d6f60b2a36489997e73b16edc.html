@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>moodle-performance-report</title>
+<meta name="md-viewer-publish" content="c969fe751c6a132f23d66082d315a7eb">
+<script>try {
+  const t = localStorage.getItem("md-viewer-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch {}</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --fg: #1d1d1f; --fg-muted: #73737a; --bg: #fff; --bg-secondary: #f5f5f6;
+  --border: rgba(0,0,0,.1); --code-bg: rgba(0,0,0,.05); --accent: #8a6500;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark;
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: 64rem; margin: 0 auto; padding: 48px 28px 96px; }
+h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.3; letter-spacing: -.01em; margin: 1.4em 0 .5em; }
+h1 { font-size: 1.9em; letter-spacing: -.02em; } h2 { font-size: 1.5em; } h3 { font-size: 1.22em; }
+h1:first-child, h2:first-child { margin-top: 0; }
+p { margin: .7em 0; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em; background: var(--code-bg); padding: .15em .4em; border-radius: 4px; }
+pre { background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
+pre code { background: none; padding: 0; font-size: .85em; }
+blockquote { margin: .8em 0; padding: .1em 0 .1em 1em; border-left: 3px solid var(--fg-muted); color: var(--fg-muted); }
+ul, ol { padding-left: 1.5em; } li { margin: .25em 0; }
+/* Tables fill the text column and may grow past it up to 90rem (centered);
+   beyond the window they scroll inside themselves, never widening the page. */
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; width: max-content; min-width: 100%; max-width: min(90rem, calc(100vw - 32px)); position: relative; left: 50%; transform: translateX(-50%); }
+th, td { border: 1px solid var(--border); padding: 6px 12px; text-align: left; overflow-wrap: break-word; }
+th { background: var(--bg-secondary); font-weight: 600; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+img { max-width: 100%; border-radius: 6px; }
+.frontmatter { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; margin: 0 0 1.5em; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: .88em; }
+.frontmatter-row { display: contents; } .frontmatter-key { color: var(--fg-muted); font-weight: 500; }
+.markdown-alert { margin: .9em 0; padding: 2px 0 2px 14px; border-left: 3px solid var(--fg-muted); }
+.markdown-alert-title { display: flex; align-items: center; gap: 7px; font-weight: 600; margin: .2em 0 .4em; }
+.task-list-item { list-style: none; } ul.contains-task-list { padding-left: .4em; }
+/* shiki emits both themes' colors as --shiki-light / --shiki-dark. */
+.shiki, .shiki span { color: var(--shiki-light); }
+:root[data-theme="dark"] .shiki, :root[data-theme="dark"] .shiki span { color: var(--shiki-dark); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shiki, :root:not([data-theme="light"]) .shiki span { color: var(--shiki-dark); }
+}
+.theme-toggle {
+  position: fixed; top: 12px; right: 12px; width: 32px; height: 32px; padding: 0;
+  display: grid; place-items: center; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg); color: var(--fg-muted);
+}
+.theme-toggle:hover { color: var(--fg); background: var(--bg-secondary); }
+@media print { .theme-toggle { display: none; } }
+.page-outline { position: fixed; left: 16px; top: 96px; z-index: 5; max-height: calc(100vh - 128px); display: flex; }
+.page-outline ol { list-style: none; margin: 0; padding: 8px; border-radius: 12px; border: 1px solid transparent; overflow: hidden auto; scrollbar-width: none; transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.page-outline li { margin: 0; }
+/* Collapsed, a row is only as tall as its dash plus a gap; it grows to fit the title on hover. */
+.page-outline button { display: flex; align-items: center; width: 100%; padding: 3px 6px; border: 0; border-radius: 7px; background: none; color: var(--fg-muted); font: inherit; font-size: 14.5px; line-height: 4px; text-align: left; cursor: pointer; transition: padding .22s ease, line-height .22s ease; }
+.po-dash { flex: none; height: 3px; border-radius: 2px; background: currentColor; opacity: .55; }
+/* The titles slide open: width, gap and indent grow from 0 (display can't animate). */
+.po-text { max-width: 0; margin-left: 0; padding-left: 0; opacity: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: max-width .22s ease, margin-left .22s ease, padding-left .22s ease, opacity .15s ease; }
+.page-outline button[aria-current="true"] { color: var(--fg); }
+.page-outline button[aria-current="true"] .po-dash { background: var(--outline-active); opacity: 1; }
+.page-outline:hover ol, .page-outline:focus-within ol { background: var(--bg); border-color: var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
+.page-outline:hover button, .page-outline:focus-within button { padding: 4px 6px; line-height: 21px; }
+.page-outline:hover .po-text, .page-outline:focus-within .po-text { max-width: 300px; margin-left: 14px; padding-left: var(--po-indent); opacity: 1; }
+.page-outline:hover button:hover, .page-outline button:focus-visible { background: var(--bg-secondary); color: var(--fg); outline: none; }
+:root { --outline-active: #2f5fb3; }
+:root[data-theme="dark"] { --outline-active: #6b9cf0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --outline-active: #6b9cf0; } }
+@media (prefers-reduced-motion: reduce) { .page-outline ol, .page-outline button, .po-text { transition: none; } }
+.page-outline .po-toggle { display: none; }
+/* Narrow screens (phones): a list button at the top left opens the headings
+   as a menu; dashes and hover don't work there. */
+@media (max-width: 1180px) {
+  .page-outline { top: 12px; left: 12px; max-height: calc(100vh - 24px); flex-direction: column; align-items: flex-start; }
+  .page-outline .po-toggle { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--fg-muted); }
+  .page-outline .po-toggle:hover { color: var(--fg); background: var(--bg-secondary); }
+  .page-outline ol { display: none; margin-top: 6px; max-width: calc(100vw - 24px); background: var(--bg); border-color: var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.12); transition: none; }
+  .page-outline.open ol { display: block; }
+  .po-dash { display: none; }
+  .page-outline button { padding: 4px 6px; line-height: 21px; transition: none; }
+  .po-text, .page-outline:hover .po-text, .page-outline:focus-within .po-text { max-width: none; margin-left: 0; padding-left: var(--po-indent); opacity: 1; transition: none; }
+  .page-outline ~ .page-title-bar { padding-left: 56px; }
+}
+@media print { .page-outline { display: none; } }
+.page-title-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 4; height: 56px; padding: 0 64px 0 20px; display: flex; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 15px; cursor: pointer; transform: translateY(-100%); opacity: 0; transition: transform .2s ease, opacity .2s ease; }
+.page-title-bar span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.page-title-bar.shown { transform: none; opacity: 1; }
+.theme-toggle { z-index: 5; }
+@media (prefers-reduced-motion: reduce) { .page-title-bar { transition: none; } }
+@media print { .page-title-bar { display: none; } }
+.page-footer { max-width: 64rem; margin: 0 auto; padding: 18px 28px 32px; border-top: 1px solid var(--border); color: var(--fg-muted); font-size: 13px; text-align: center; }
+.page-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.page-footer a:hover { color: var(--fg); }
+@media print { .page-footer { display: none; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Moodle Performance in Türkiye — Cloudflare Analysis</h1>
+<p><strong>Site:</strong> <a href="http://edu.oihs.ca">edu.oihs.ca</a>
+<strong>Period analysed:</strong> 21–28 October 2026
+<strong>Date:</strong> 28 October 2026</p>
+<hr>
+<h2>1. Executive Summary</h2>
+<p>Users in Türkiye have reported slow page loads on Moodle. Cloudflare traffic data for the past week points to three main causes:</p>
+<ol>
+<li><strong>Distance to the serving location.</strong> Türkiye generates 62% of all requests, yet only about 10% of Turkish requests are served from Cloudflare locations in Türkiye (Istanbul, Izmir). The majority are served from Amsterdam, London, Frankfurt and Sofia. Canadian users, by comparison, are 87% served locally from Toronto.</li>
+<li><strong>Frequent trips to the origin server.</strong> The Moodle server is hosted in Frankfurt (Hostinger). 63% of Turkish requests are not answered from Cloudflare's cache and travel all the way to the server. Some static theme files are never cached because no cache rule exists for them.</li>
+<li><strong>Oversized files.</strong> A 3.3 MB animated loading GIF, banner images of about 4 MB each, and a 1.2 MB JavaScript bundle add significant load time, especially on slower connections.</li>
+</ol>
+<p>Server resources are not the bottleneck. The slowness is mainly a combination of network distance, number of uncached requests and file size.</p>
+<h2>2. Traffic Overview</h2>
+<h3>2.1 Requests by country</h3>
+<table>
+<thead>
+<tr>
+<th>Country</th>
+<th style="text-align:right">Requests</th>
+<th style="text-align:right">Data served</th>
+<th style="text-align:right">Share of requests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>All countries</strong></td>
+<td style="text-align:right">470,509</td>
+<td style="text-align:right">25.0 GB</td>
+<td style="text-align:right">100%</td>
+</tr>
+<tr>
+<td>Türkiye</td>
+<td style="text-align:right">291,887</td>
+<td style="text-align:right">17.3 GB</td>
+<td style="text-align:right">62%</td>
+</tr>
+<tr>
+<td>Canada</td>
+<td style="text-align:right">72,062</td>
+<td style="text-align:right">3.4 GB</td>
+<td style="text-align:right">15%</td>
+</tr>
+<tr>
+<td>United States</td>
+<td style="text-align:right">47,084</td>
+<td style="text-align:right">1.1 GB</td>
+<td style="text-align:right">10%</td>
+</tr>
+<tr>
+<td>Others</td>
+<td style="text-align:right">~59,000</td>
+<td style="text-align:right">~3.2 GB</td>
+<td style="text-align:right">13%</td>
+</tr>
+</tbody>
+</table>
+<p>Overall cache hit ratio across all traffic: <strong>23.4%</strong>.</p>
+<h3>2.2 Cloudflare serving locations</h3>
+<table>
+<thead>
+<tr>
+<th>Country</th>
+<th>Serving locations (share of requests)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Türkiye</td>
+<td>Amsterdam 40% · London 14% · Frankfurt 12% · Sofia 11% · Istanbul 6% · Izmir 4% · other 13%</td>
+</tr>
+<tr>
+<td>Canada</td>
+<td>Toronto 87% · Newark 5% · Boston 4% · Vancouver 2%</td>
+</tr>
+</tbody>
+</table>
+<h3>2.3 Cache status</h3>
+<table>
+<thead>
+<tr>
+<th>Country</th>
+<th style="text-align:right">Forwarded to origin</th>
+<th style="text-align:right">Served from cache</th>
+<th style="text-align:right">Bypassed cache</th>
+<th style="text-align:right">Other</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Türkiye</td>
+<td style="text-align:right">63%</td>
+<td style="text-align:right">25%</td>
+<td style="text-align:right">6%</td>
+<td style="text-align:right">5%</td>
+</tr>
+<tr>
+<td>Canada</td>
+<td style="text-align:right">83%</td>
+<td style="text-align:right">7%</td>
+<td style="text-align:right">6%</td>
+<td style="text-align:right">4%</td>
+</tr>
+</tbody>
+</table>
+<p><em>Sections 2.2 and 2.3 are based on Cloudflare's sampled analytics and should be read as close approximations.</em></p>
+<p>Which Cloudflare location a Turkish ISP connects to is determined by the Cloudflare plan tier and by ISP network peering. It cannot be changed through zone settings. The available levers are reducing the number of requests that reach the origin and reducing the size of transferred files.</p>
+<h2>3. Heaviest Content for Users in Türkiye</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Data (1 week)</th>
+<th style="text-align:right">Requests</th>
+<th>Cached</th>
+<th>Resource</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">2.7 GB</td>
+<td style="text-align:right">~970</td>
+<td>Yes</td>
+<td>RemUI loader image (<code>Hareketli Logo.gif</code>)</td>
+<td>3.3 MB animated GIF displayed while pages load</td>
+</tr>
+<tr>
+<td style="text-align:right">1.5 GB</td>
+<td style="text-align:right">~130</td>
+<td>No</td>
+<td><code>draftfile.php/…/video.webm</code></td>
+<td>Draft video uploads; expected user content</td>
+</tr>
+<tr>
+<td style="text-align:right">1.1 GB</td>
+<td style="text-align:right">~840</td>
+<td>Yes</td>
+<td><code>lib/requirejs.php/…/core/first.js</code></td>
+<td>1.2 MB compressed JavaScript bundle</td>
+</tr>
+<tr>
+<td style="text-align:right">0.7 GB</td>
+<td style="text-align:right">~230</td>
+<td>No</td>
+<td><code>Copia de Banners*.svg</code> (course sections)</td>
+<td>About 4 MB per file; likely raster images wrapped in SVG</td>
+</tr>
+<tr>
+<td style="text-align:right">251 MB</td>
+<td style="text-align:right">4,952</td>
+<td><strong>No</strong></td>
+<td><code>theme/yui_combo.php</code></td>
+<td>Static and versioned; should be cached</td>
+</tr>
+<tr>
+<td style="text-align:right">128 MB</td>
+<td style="text-align:right">451</td>
+<td><strong>No</strong></td>
+<td><code>theme/styles.php/remui/…/all</code></td>
+<td>2.2 MB of CSS (284 KB compressed); static and versioned; should be cached</td>
+</tr>
+<tr>
+<td style="text-align:right">151 MB</td>
+<td style="text-align:right">361</td>
+<td>Yes</td>
+<td><code>Inter.ttf</code></td>
+<td>420 KB font file</td>
+</tr>
+</tbody>
+</table>
+<h2>4. Current Cloudflare Configuration</h2>
+<p><strong>Plan:</strong> Free</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Status</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cache Rules</td>
+<td>None configured</td>
+<td>Theme CSS/JS combo files are always fetched from the origin</td>
+</tr>
+<tr>
+<td>0-RTT Connection Resumption</td>
+<td>Off</td>
+<td>Free to enable; reduces connection time for returning visitors</td>
+</tr>
+<tr>
+<td>Early Hints</td>
+<td>Off</td>
+<td>Free to enable; lets browsers start loading CSS/JS sooner</td>
+</tr>
+<tr>
+<td>Brotli / HTTP/2 / HTTP/3</td>
+<td>On</td>
+<td>Appropriate</td>
+</tr>
+<tr>
+<td>Rocket Loader</td>
+<td>Off</td>
+<td>Appropriate; known to conflict with Moodle JavaScript</td>
+</tr>
+<tr>
+<td>Browser Cache TTL</td>
+<td>Respect origin</td>
+<td>Appropriate; Moodle sends long-lived headers for versioned files</td>
+</tr>
+<tr>
+<td>SSL mode</td>
+<td>Full</td>
+<td>Recommended: Full (strict) <em>(security, not performance)</em></td>
+</tr>
+<tr>
+<td>Minimum TLS version</td>
+<td>1.0</td>
+<td>Recommended: 1.2 <em>(security, not performance)</em></td>
+</tr>
+</tbody>
+</table>
+<p>The Free plan does not provide response-time metrics.</p>
+<h2>5. Recommendations</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Action</th>
+<th>Expected impact</th>
+<th>Effort</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Remove or replace the 3.3 MB loading GIF (RemUI → Site loader settings) with a CSS spinner or an SVG under 20 KB</td>
+<td>High: removes 3.3 MB from every first visit</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Add a Cloudflare Cache Rule for Moodle's versioned theme/JS endpoints (see 5.1)</td>
+<td>High: CSS/JS served from the nearest Cloudflare location instead of Frankfurt</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Re-export the "Copia de Banners" images as WebP/JPEG (~100–200 KB each) and replace them in the course sections</td>
+<td>Medium–High on affected course pages</td>
+<td>Low–Medium</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Enable 0-RTT and Early Hints (Cloudflare → Speed → Optimization)</td>
+<td>Low–Medium</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Reduce theme payload: review enabled RemUI features and custom SCSS, and remove the <code>pdf.js</code> script loaded on every page</td>
+<td>Medium</td>
+<td>Medium</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Evaluate Argo Smart Routing or the Pro plan only if items 1–5 are insufficient</td>
+<td>Uncertain: does not guarantee routing to Istanbul</td>
+<td>Cost</td>
+</tr>
+</tbody>
+</table>
+<h3>5.1 Proposed Cache Rule</h3>
+<ul>
+<li><strong>Name:</strong> Moodle revisioned theme/JS assets</li>
+<li><strong>Applies to:</strong> requests to <code>edu.oihs.ca</code> whose path starts with one of:
+<ul>
+<li><code>/theme/styles.php/</code></li>
+<li><code>/theme/yui_combo.php</code></li>
+<li><code>/lib/javascript.php/</code></li>
+<li><code>/lib/requirejs.php/</code></li>
+<li><code>/theme/image.php/</code></li>
+<li><code>/theme/font.php/</code></li>
+</ul>
+</li>
+<li><strong>Cache eligibility:</strong> Eligible for cache</li>
+<li><strong>Edge TTL:</strong> Use the origin's Cache-Control header</li>
+<li><strong>Browser TTL:</strong> Respect origin</li>
+<li><strong>Cache key:</strong> Default; the query string is kept, which <code>yui_combo.php</code> requires</li>
+</ul>
+<p><strong>Rationale.</strong> These URLs contain Moodle's theme/JavaScript revision number, and Moodle already marks them as <code>public, immutable</code> with a 90-day lifetime. When caches are purged in Moodle, the revision number and therefore the URLs change, so stale content cannot be served.</p>
+<p><strong>Status:</strong> Prepared. It will be applied once an API token with Cache Rules edit permission is available.</p>
+<h2>6. Next Steps</h2>
+<ol>
+<li>Implement recommendations 1–4.</li>
+<li>Re-measure page load times after implementation and compare them against the current baseline.</li>
+</ol>
+
+</main>
+<footer class="page-footer">Published with <a href="https://github.com/oztalha/md-viewer">md-viewer</a></footer>
+<script>(() => {
+  const root = document.documentElement;
+  const icons = {
+    auto: '<circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/>',
+    light: '<circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3"/>',
+    dark: '<path d="M13.5 9.5A5.5 5.5 0 1 1 6.5 2.5a4.5 4.5 0 0 0 7 7z"/>',
+  };
+  const labels = { auto: "Theme: match system", light: "Theme: light", dark: "Theme: dark" };
+  const next = { auto: "light", light: "dark", dark: "auto" };
+  const button = document.createElement("button");
+  button.className = "theme-toggle";
+  const render = () => {
+    const mode = root.dataset.theme || "auto";
+    button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' + icons[mode] + "</svg>";
+    button.title = labels[mode];
+    button.setAttribute("aria-label", labels[mode]);
+  };
+  button.addEventListener("click", () => {
+    const mode = next[root.dataset.theme || "auto"];
+    if (mode === "auto") delete root.dataset.theme;
+    else root.dataset.theme = mode;
+    try {
+      if (mode === "auto") localStorage.removeItem("md-viewer-theme");
+      else localStorage.setItem("md-viewer-theme", mode);
+    } catch {} // storage blocked: the choice lasts for this visit
+    render();
+  });
+  render();
+  document.body.appendChild(button);
+})();</script>
+<script>(() => {
+  const headings = [...document.querySelectorAll("main h1, main h2, main h3, main h4")];
+  if (headings.length < 2) return;
+  const top = Math.min(...headings.map((h) => +h.tagName[1]));
+  const widths = [28, 22, 16, 12];
+  const nav = document.createElement("nav");
+  nav.className = "page-outline";
+  nav.setAttribute("aria-label", "Outline");
+  const list = document.createElement("ol");
+  const buttons = headings.map((h) => {
+    const depth = +h.tagName[1] - top;
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    const dash = document.createElement("span");
+    dash.className = "po-dash";
+    dash.style.width = widths[depth] + "px";
+    dash.style.marginRight = (widths[0] - widths[depth]) + "px";
+    const text = document.createElement("span");
+    text.className = "po-text";
+    text.textContent = h.textContent.trim();
+    text.style.setProperty("--po-indent", depth * 16 + "px");
+    button.title = text.textContent;
+    button.append(dash, text);
+    button.addEventListener("click", () => h.scrollIntoView({ behavior: "smooth", block: "start" }));
+    item.append(button);
+    list.append(item);
+    return button;
+  });
+  const toggle = document.createElement("button");
+  toggle.className = "po-toggle";
+  toggle.setAttribute("aria-label", "Outline");
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 4h10M3 8h10M3 12h6"/></svg>';
+  const setOpen = (open) => {
+    nav.classList.toggle("open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+  };
+  toggle.addEventListener("click", () => setOpen(!nav.classList.contains("open")));
+  list.addEventListener("click", () => setOpen(false));
+  document.addEventListener("click", (e) => { if (!nav.contains(e.target)) setOpen(false); });
+  nav.append(toggle, list);
+  document.body.append(nav);
+  // The current section: the last heading scrolled past the top (the first
+  // before any), or the last one once the page is scrolled to the end.
+  let queued = false;
+  const update = () => {
+    queued = false;
+    let current = 0;
+    headings.forEach((h, i) => { if (h.getBoundingClientRect().top <= 96) current = i; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) current = headings.length - 1;
+    buttons.forEach((b, i) => b.setAttribute("aria-current", String(i === current)));
+  };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();</script>
+<script>(() => {
+  const first = [...document.querySelectorAll("main > *")].find((el) => !el.classList.contains("frontmatter"));
+  if (!first || first.tagName !== "H1") return;
+  const bar = document.createElement("div");
+  bar.className = "page-title-bar";
+  bar.setAttribute("aria-hidden", "true");
+  const text = document.createElement("span");
+  text.textContent = first.textContent.trim();
+  bar.append(text);
+  bar.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+  document.body.append(bar);
+  new IntersectionObserver(([entry]) => {
+    bar.classList.toggle("shown", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+  }).observe(first);
+})();</script>
+</body>
+</html>
