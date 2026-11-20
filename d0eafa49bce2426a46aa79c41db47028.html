@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TOEFL Speaking Interview Templates and Sample Answers</title>
+<meta name="md-viewer-publish" content="7b32ff5a787182a04c5bbcd0eed15e4a">
+<script>try {
+  const t = localStorage.getItem("md-viewer-theme");
+  if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+} catch {}</script>
+<style>
+:root {
+  color-scheme: light dark;
+  --fg: #1d1d1f; --fg-muted: #73737a; --bg: #fff; --bg-secondary: #f5f5f6;
+  --border: rgba(0,0,0,.1); --code-bg: rgba(0,0,0,.05); --accent: #8a6500;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark;
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fg: #e8e8ea; --fg-muted: #98989f; --bg: #1e1e20; --bg-secondary: #29292c;
+    --border: rgba(255,255,255,.1); --code-bg: rgba(255,255,255,.06); --accent: #ffd23f;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: 64rem; margin: 0 auto; padding: 48px 28px 96px; }
+h1, h2, h3, h4, h5, h6 { font-weight: 700; line-height: 1.3; letter-spacing: -.01em; margin: 1.4em 0 .5em; }
+h1 { font-size: 1.9em; letter-spacing: -.02em; } h2 { font-size: 1.5em; } h3 { font-size: 1.22em; }
+h1:first-child, h2:first-child { margin-top: 0; }
+p { margin: .7em 0; }
+a { color: var(--accent); text-decoration: none; } a:hover { text-decoration: underline; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em; background: var(--code-bg); padding: .15em .4em; border-radius: 4px; }
+pre { background: var(--code-bg); border-radius: 8px; padding: 14px 16px; overflow-x: auto; }
+pre code { background: none; padding: 0; font-size: .85em; }
+blockquote { margin: .8em 0; padding: .1em 0 .1em 1em; border-left: 3px solid var(--fg-muted); color: var(--fg-muted); }
+ul, ol { padding-left: 1.5em; } li { margin: .25em 0; }
+/* Tables fill the text column and may grow past it up to 90rem (centered);
+   beyond the window they scroll inside themselves, never widening the page. */
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; width: max-content; min-width: 100%; max-width: min(90rem, calc(100vw - 32px)); position: relative; left: 50%; transform: translateX(-50%); }
+th, td { border: 1px solid var(--border); padding: 6px 12px; text-align: left; overflow-wrap: break-word; }
+th { background: var(--bg-secondary); font-weight: 600; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2em 0; }
+img { max-width: 100%; border-radius: 6px; }
+.frontmatter { display: grid; grid-template-columns: max-content 1fr; gap: 4px 18px; margin: 0 0 1.5em; padding: 12px 16px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: .88em; }
+.frontmatter-row { display: contents; } .frontmatter-key { color: var(--fg-muted); font-weight: 500; }
+.markdown-alert { margin: .9em 0; padding: 2px 0 2px 14px; border-left: 3px solid var(--fg-muted); }
+.markdown-alert-title { display: flex; align-items: center; gap: 7px; font-weight: 600; margin: .2em 0 .4em; }
+.task-list-item { list-style: none; } ul.contains-task-list { padding-left: .4em; }
+/* shiki emits both themes' colors as --shiki-light / --shiki-dark. */
+.shiki, .shiki span { color: var(--shiki-light); }
+:root[data-theme="dark"] .shiki, :root[data-theme="dark"] .shiki span { color: var(--shiki-dark); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shiki, :root:not([data-theme="light"]) .shiki span { color: var(--shiki-dark); }
+}
+.theme-toggle {
+  position: fixed; top: 12px; right: 12px; width: 32px; height: 32px; padding: 0;
+  display: grid; place-items: center; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg); color: var(--fg-muted);
+}
+.theme-toggle:hover { color: var(--fg); background: var(--bg-secondary); }
+@media print { .theme-toggle { display: none; } }
+.page-outline { position: fixed; left: 16px; top: 96px; z-index: 5; max-height: calc(100vh - 128px); display: flex; }
+.page-outline ol { list-style: none; margin: 0; padding: 8px; border-radius: 12px; border: 1px solid transparent; overflow: hidden auto; scrollbar-width: none; transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+.page-outline li { margin: 0; }
+/* Collapsed, a row is only as tall as its dash plus a gap; it grows to fit the title on hover. */
+.page-outline button { display: flex; align-items: center; width: 100%; padding: 3px 6px; border: 0; border-radius: 7px; background: none; color: var(--fg-muted); font: inherit; font-size: 14.5px; line-height: 4px; text-align: left; cursor: pointer; transition: padding .22s ease, line-height .22s ease; }
+.po-dash { flex: none; height: 3px; border-radius: 2px; background: currentColor; opacity: .55; }
+/* The titles slide open: width, gap and indent grow from 0 (display can't animate). */
+.po-text { max-width: 0; margin-left: 0; padding-left: 0; opacity: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; transition: max-width .22s ease, margin-left .22s ease, padding-left .22s ease, opacity .15s ease; }
+.page-outline button[aria-current="true"] { color: var(--fg); }
+.page-outline button[aria-current="true"] .po-dash { background: var(--outline-active); opacity: 1; }
+.page-outline:hover ol, .page-outline:focus-within ol { background: var(--bg); border-color: var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.12); }
+.page-outline:hover button, .page-outline:focus-within button { padding: 4px 6px; line-height: 21px; }
+.page-outline:hover .po-text, .page-outline:focus-within .po-text { max-width: 300px; margin-left: 14px; padding-left: var(--po-indent); opacity: 1; }
+.page-outline:hover button:hover, .page-outline button:focus-visible { background: var(--bg-secondary); color: var(--fg); outline: none; }
+:root { --outline-active: #2f5fb3; }
+:root[data-theme="dark"] { --outline-active: #6b9cf0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --outline-active: #6b9cf0; } }
+@media (prefers-reduced-motion: reduce) { .page-outline ol, .page-outline button, .po-text { transition: none; } }
+.page-outline .po-toggle { display: none; }
+/* Narrow screens (phones): a list button at the top left opens the headings
+   as a menu; dashes and hover don't work there. */
+@media (max-width: 1180px) {
+  .page-outline { top: 12px; left: 12px; max-height: calc(100vh - 24px); flex-direction: column; align-items: flex-start; }
+  .page-outline .po-toggle { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--fg-muted); }
+  .page-outline .po-toggle:hover { color: var(--fg); background: var(--bg-secondary); }
+  .page-outline ol { display: none; margin-top: 6px; max-width: calc(100vw - 24px); background: var(--bg); border-color: var(--border); box-shadow: 0 6px 24px rgba(0,0,0,.12); transition: none; }
+  .page-outline.open ol { display: block; }
+  .po-dash { display: none; }
+  .page-outline button { padding: 4px 6px; line-height: 21px; transition: none; }
+  .po-text, .page-outline:hover .po-text, .page-outline:focus-within .po-text { max-width: none; margin-left: 0; padding-left: var(--po-indent); opacity: 1; transition: none; }
+  .page-outline ~ .page-title-bar { padding-left: 56px; }
+}
+@media print { .page-outline { display: none; } }
+.page-title-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 4; height: 56px; padding: 0 64px 0 20px; display: flex; align-items: center; background: var(--bg); border-bottom: 1px solid var(--border); font-size: 15px; cursor: pointer; transform: translateY(-100%); opacity: 0; transition: transform .2s ease, opacity .2s ease; }
+.page-title-bar span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.page-title-bar.shown { transform: none; opacity: 1; }
+.theme-toggle { z-index: 5; }
+@media (prefers-reduced-motion: reduce) { .page-title-bar { transition: none; } }
+@media print { .page-title-bar { display: none; } }
+.page-footer { max-width: 64rem; margin: 0 auto; padding: 18px 28px 32px; border-top: 1px solid var(--border); color: var(--fg-muted); font-size: 13px; text-align: center; }
+.page-footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.page-footer a:hover { color: var(--fg); }
+@media print { .page-footer { display: none; } }
+</style>
+</head>
+<body>
+<main>
+<h1 id="toefl-speaking-interview-templates-and-sample-answers">TOEFL Speaking: Interview Templates and Sample Answers</h1>
+<p>Nov 18, 2026 </p>
+<h2 id="contents">Contents</h2>
+<p><strong>Study these first</strong></p>
+<ul>
+<li><a href="#m8rr6ee30c9.26493">Past tense: make it a habit</a></li>
+<li><a href="#m8rr6ee30c9.17777">Story bank: ready examples for any topic</a></li>
+<li><a href="#m8rr6ee30c9.20772">Phrases for a band 5</a></li>
+<li><a href="#phrases-for-a-band-6">Phrases for a band 6</a></li>
+</ul>
+<p><strong>Templates</strong></p>
+<ul>
+<li><a href="#m8rr6ee30c9.67">How to use this</a></li>
+<li><a href="#m8rr6ee30c9.524">Question 1: Personal question</a></li>
+<li><a href="#m8rr6ee30c9.1273">Question 2: Experience</a></li>
+<li><a href="#m8rr6ee30c9.2155">Question 3: Opinion on a statement</a></li>
+<li><a href="#m8rr6ee30c9.3111">Question 4: Policy or change</a></li>
+</ul>
+<p><strong>Sample answers by topic</strong></p>
+<ul>
+<li><a href="#m8rr6ee30c9.4611">Health</a></li>
+<li><a href="#m8rr6ee30c9.10575">Education (with feedback)</a></li>
+<li><a href="#m8rr6ee30c9.17669">Free time</a></li>
+<li><a href="#m8rr6ee30c9.21199">Work</a></li>
+<li><a href="#m8rr6ee30c9.23883">Environment</a></li>
+</ul>
+<h2 id="past-tense-make-it-a-habit">Past tense: make it a habit</h2>
+<p>In every round, your past stories slipped into the present tense. The fix is a habit: when you start a story with a time phrase, switch every verb to the past until the story ends.</p>
+<p><strong>The trigger rule:</strong> if your sentence starts with "Six months ago", "Last week", "Once", "When I was at high school" or "Three years ago", every verb after it goes into the past.</p>
+<h3 id="your-real-mistakes-fixed">Your real mistakes, fixed</h3>
+<table>
+<thead>
+<tr>
+<th>You said</th>
+<th>Say instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I am just exhausted</td>
+<td>I was exhausted</td>
+</tr>
+<tr>
+<td>going to walk</td>
+<td>went for a walk</td>
+</tr>
+<tr>
+<td>our databases just deleted</td>
+<td>our database was deleted</td>
+</tr>
+<tr>
+<td>we lose lots of our data</td>
+<td>we lost a lot of our data</td>
+</tr>
+<tr>
+<td>I just report</td>
+<td>I reported</td>
+</tr>
+<tr>
+<td>I gain confidence</td>
+<td>I gained confidence</td>
+</tr>
+<tr>
+<td>we start to stop them</td>
+<td>we started to stop them</td>
+</tr>
+<tr>
+<td>the government gives permission</td>
+<td>the government gave permission</td>
+</tr>
+<tr>
+<td>they just build</td>
+<td>they built</td>
+</tr>
+</tbody>
+</table>
+<h3 id="irregular-verbs-you-use-most">Irregular verbs you use most</h3>
+<table>
+<thead>
+<tr>
+<th>Now</th>
+<th>Past</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>go</td>
+<td>went</td>
+</tr>
+<tr>
+<td>make</td>
+<td>made</td>
+</tr>
+<tr>
+<td>build</td>
+<td>built</td>
+</tr>
+<tr>
+<td>lose</td>
+<td>lost</td>
+</tr>
+<tr>
+<td>feel</td>
+<td>felt</td>
+</tr>
+<tr>
+<td>take</td>
+<td>took</td>
+</tr>
+<tr>
+<td>find</td>
+<td>found</td>
+</tr>
+<tr>
+<td>give</td>
+<td>gave</td>
+</tr>
+<tr>
+<td>come</td>
+<td>came</td>
+</tr>
+<tr>
+<td>think</td>
+<td>thought</td>
+</tr>
+<tr>
+<td>can</td>
+<td>could</td>
+</tr>
+<tr>
+<td>cut</td>
+<td>cut</td>
+</tr>
+</tbody>
+</table>
+<h3 id="daily-drill-5-minutes">Daily drill (5 minutes)</h3>
+<ol>
+<li>Pick one story from your story bank.</li>
+<li>Say it out loud, starting with a time phrase, like "Six months ago, ...".</li>
+<li>Record yourself on your phone.</li>
+<li>Listen back and count every present-tense verb. Aim for zero.</li>
+<li>Repeat with a new story tomorrow.</li>
+</ol>
+<h3 id="quick-practice-change-to-the-past">Quick practice: change to the past</h3>
+<ol>
+<li>Last weekend, I (go) hiking with my friends.</li>
+<li>When I (be) at high school, English (be) my biggest challenge.</li>
+<li>Three years ago, we (move) to Urla, and I (feel) much calmer.</li>
+<li>The database (be) deleted, so I (report) it to my manager.</li>
+<li>We (try) to stop them, but nobody (take) action.</li>
+</ol>
+<p><strong>Answers:</strong> 1. went · 2. was, was · 3. moved, felt · 4. was, reported · 5. tried, took</p>
+<h2 id="story-bank-ready-examples-for-any-topic">Story bank: ready examples for any topic</h2>
+<p>Learn these six stories well enough to tell them without thinking. In the exam, pick the one that fits, and put it after your reason: "For example, ...". The TOEFL scores your English, not whether every detail is true, so small made-up details are fine.</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Best stories</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>City life</td>
+<td>1, 2</td>
+</tr>
+<tr>
+<td>Work</td>
+<td>2, 3</td>
+</tr>
+<tr>
+<td>Technology</td>
+<td>3, 5</td>
+</tr>
+<tr>
+<td>Education</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Health</td>
+<td>1, 4, 5</td>
+</tr>
+<tr>
+<td>Free time</td>
+<td>4, 5</td>
+</tr>
+</tbody>
+</table>
+<h3 id="story-1-moving-from-istanbul-to-urla">Story 1: Moving from Istanbul to Urla</h3>
+<p>Three years ago, I moved from Istanbul to Urla, a small seaside town near Izmir. In Istanbul, I spent about two hours a day in traffic, and life always felt rushed. In Urla, I can walk to the shops and cafés in five minutes, and I go for a walk by the sea after work. At first, I missed my friends, but now I feel much calmer and healthier.</p>
+<p><strong>Use it for:</strong> city vs town life, traffic, cars in city centres, stress, health, big changes.</p>
+<h3 id="story-2-hybrid-work">Story 2: Hybrid work</h3>
+<p>I work from home three days a week and go to the office twice a week. On home days, I save about two hours of travel, so I can walk in the morning or work out at lunchtime. On office days, I enjoy meeting my team and solving problems together. For me, this balance is the best of both worlds.</p>
+<p><strong>Use it for:</strong> working from home, returning to the office, work-life balance, company policies, teamwork.</p>
+<h3 id="story-3-ai-coding-tools">Story 3: AI coding tools</h3>
+<p>As a software engineer, I use AI coding tools every day. Recently, I built a complete system in one week, which would have taken about six months a few years ago. It was exciting, but now my managers expect faster results, so I sometimes feel more pressure. Technology saves time, but it also raises expectations.</p>
+<p><strong>Use it for:</strong> technology, AI, stress, work, "technology makes life easier", changes at work.</p>
+<h3 id="story-4-hiking-in-the-belgrade-forest">Story 4: Hiking in the Belgrade Forest</h3>
+<p>About six weeks ago, I had a terrible day at work. I couldn't fix a problem in our code, and I was exhausted. So I closed my laptop and went hiking in the Belgrade Forest for three hours. When I came back, my mind was clear, and the next morning I fixed the problem in twenty minutes.</p>
+<p><strong>Use it for:</strong> hobbies, nature, stress, a difficult situation, health, weekends.</p>
+<h3 id="story-5-my-sewing-hobby-and-a-screen-free-week">Story 5: My sewing hobby and a screen-free week</h3>
+<p>Because I look at a screen all day, I started sewing two years ago. Last month, I made a summer dress, and it took me three weekends, but I felt really proud. Last summer, I also tried a screen-free week on holiday. It was hard at first, but after a few days I felt much less stressed.</p>
+<p><strong>Use it for:</strong> free time, creativity, screen time, social media, technology, mental health.</p>
+<h3 id="story-6-learning-english-at-high-school">Story 6: Learning English at high school</h3>
+<p>When I was at high school, English was my biggest challenge. I was afraid to speak, because I thought I would never sound natural. So I forced myself to use English every day, in my homework and with friends in class. Slowly, I gained confidence, and now English is one of my strengths.</p>
+<p><strong>Use it for:</strong> education, learning a skill, a challenge you faced, online vs classroom learning, confidence.</p>
+<h2 id="phrases-for-a-band-5">Phrases for a band 5</h2>
+<p>These phrases make answers sound more natural and organised. Use one or two per answer, not all of them.</p>
+<ul>
+<li>"To be honest, ..." / "Personally, I'd say ..."</li>
+<li>"The main reason is that ..." / "On top of that, ..."</li>
+<li>"A good example of this is when ..."</li>
+<li>"Looking back, ..." (for past stories)</li>
+<li>"That said, I can see why some people think ..."</li>
+<li>"It really depends on ..."</li>
+<li>"All in all, ..." / "So, overall, ..."</li>
+</ul>
+<h2 id="phrases-for-a-band-6">Phrases for a band 6</h2>
+<p>Band 6 answers sound natural and precise, with almost no grammar mistakes. Pick two or three of these and practise them until they come out automatically. Accuracy still matters more than fancy words.</p>
+<p><strong>Opening with a clear position</strong></p>
+<ul>
+<li>"I'm firmly in favour of this, mainly because ..."</li>
+<li>"I'd say I'm somewhere in the middle on this."</li>
+<li>"For me, the answer is a clear yes, as long as ..."</li>
+</ul>
+<p><strong>Giving reasons</strong></p>
+<ul>
+<li>"What it really comes down to is ..."</li>
+<li>"The biggest advantage, in my view, is that ..."</li>
+<li>"This matters because, in the long run, ..."</li>
+</ul>
+<p><strong>Telling a story</strong></p>
+<ul>
+<li>"I'll never forget the time when ..."</li>
+<li>"What I didn't expect was that ..."</li>
+<li>"It turned out that ..."</li>
+<li>"By the end of that week, I had ..."</li>
+</ul>
+<p><strong>Showing the other side</strong></p>
+<ul>
+<li>"Admittedly, there are some downsides, such as ..."</li>
+<li>"I can see the appeal of the opposite view, but ..."</li>
+<li>"That's a fair point, but on balance ..."</li>
+</ul>
+<p><strong>Concluding</strong></p>
+<ul>
+<li>"On balance, I'd say the benefits clearly outweigh the drawbacks."</li>
+<li>"So, for me, it's really a question of ..."</li>
+<li>"That's why I'm convinced that ..."</li>
+</ul>
+<p><strong>Precise words to replace simple ones</strong></p>
+<table>
+<thead>
+<tr>
+<th>Instead of</th>
+<th>Try</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>very important</td>
+<td>essential, crucial</td>
+</tr>
+<tr>
+<td>very tired</td>
+<td>exhausted, worn out</td>
+</tr>
+<tr>
+<td>make better</td>
+<td>improve</td>
+</tr>
+<tr>
+<td>a lot of</td>
+<td>a great deal of, plenty of</td>
+</tr>
+<tr>
+<td>good for</td>
+<td>beneficial for</td>
+</tr>
+<tr>
+<td>get used to</td>
+<td>adapt to</td>
+</tr>
+<tr>
+<td>bad effect</td>
+<td>negative impact</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-use-this">How to use this</h2>
+<p>Every interview answer follows the same four steps: answer, reason, example, conclusion. You get 45 seconds and no preparation time, so the first sentence must answer the question directly.</p>
+<ol>
+<li>Start speaking within two seconds, with a full-sentence answer.</li>
+<li>Keep sentences short; most mistakes happen in long ones.</li>
+<li>Use one of your stories: Istanbul to Urla, software engineering, sewing, hybrid work.</li>
+<li>Always finish with "So, overall, ...".</li>
+</ol>
+<h2 id="question-1-personal-question">Question 1: Personal question</h2>
+<p><strong>Template</strong></p>
+<ul>
+<li>"I usually ____." / "The ____ I use most is ____." / "My favourite way to ____ is ____."</li>
+<li>"The main reason is that ____." / "What it really comes down to is ____."</li>
+<li>"For example, last week I ____." / "For instance, every morning I ____."</li>
+<li>"Apart from that, I also ____."</li>
+<li>"So, overall, ____ really helps me ____." / "That's why ____ is essential for me."</li>
+<li>"Let me give you an example from my daily life."</li>
+</ul>
+<p><strong>Sample question:</strong> What do you usually do in your free time?</p>
+<p><strong>Sample answer:</strong> In my free time, I usually sew. This is because I work as a software engineer, so I spend all day in front of a screen, and sewing lets me use my hands instead. For example, last month I made a summer dress from a simple pattern. It took me three weekends, but I felt really proud when I wore it for the first time. It is also very relaxing, because I have to focus on one small step at a time. So, overall, sewing is the best way for me to rest after a long week.</p>
+<h2 id="question-2-experience">Question 2: Experience</h2>
+<p><strong>Template</strong></p>
+<ul>
+<li>"About ____ years ago, I ____." / "I'll never forget the time when I ____."</li>
+<li>"At first, it was ____, because ____." / "I decided to ____, so I ____."</li>
+<li>"After ____ weeks/months, ____." / "What I didn't expect was that ____." / "It turned out that ____."</li>
+<li>"Now I feel ____, because ____."</li>
+<li>"So, overall, that experience taught me that ____."</li>
+<li>"Looking back, the most important thing was ____."</li>
+</ul>
+<p><strong>Sample question:</strong> Tell me about a time when you had to adapt to a big change.</p>
+<p><strong>Sample answer:</strong> I remember when I moved from Istanbul to Urla three years ago. At that time, I started working in a hybrid way, so I did not need to live near the office anymore. At first, I felt a bit lonely, because I did not know anyone, and the town was much quieter than Istanbul. But later I realised that the quiet life was good for me. For example, I now walk by the sea after work instead of sitting in traffic for two hours. So, overall, that experience taught me that a big change can be difficult at first, but it can make your life much better.</p>
+<h2 id="question-3-opinion-on-a-statement">Question 3: Opinion on a statement</h2>
+<p><strong>Template</strong></p>
+<ul>
+<li>"I agree with this statement." / "I disagree with this statement." / "I'd say I'm somewhere in the middle on this."</li>
+<li>"In my opinion, ____, because ____." / "The biggest advantage, in my view, is that ____."</li>
+<li>"For example, in my own life, ____." / "If I ____, I would ____."</li>
+<li>"Of course, some people ____, but that depends on ____." / "I can see the appeal of the opposite view, but ____."</li>
+<li>"So, overall, I think ____." / "That's why I'm convinced that ____."</li>
+<li>"My own experience is a good example of this."</li>
+</ul>
+<p><strong>Sample question:</strong> Some people say, "It is better to live in a small town than in a big city." Do you agree or disagree?</p>
+<p><strong>Sample answer:</strong> I agree with this statement, at least for people who can work remotely. The main reason is that life in a small town is calmer and much less stressful. For example, in my own life, I moved from Istanbul to Urla. In Istanbul, I spent about two hours a day in traffic, and everything felt rushed. In Urla, I can walk to the shops in five minutes, and I have more time for my sewing hobby. Of course, big cities have more jobs and events, but with hybrid work, I can still go to Izmir when I need to. So, overall, I believe a small town gives you a healthier and happier life.</p>
+<h2 id="question-4-policy-or-change">Question 4: Policy or change</h2>
+<p><strong>Template</strong></p>
+<ul>
+<li>"Yes, I think it's a good idea." / "No, I don't think it's a good idea." / "I'm firmly in favour of this, mainly because ____."</li>
+<li>"The main reason is that ____." / "This matters because, in the long run, ____."</li>
+<li>"This would help ____, such as ____."</li>
+<li>"For example, in Urla / at my company, ____."</li>
+<li>"Of course, some people might say ____, but ____." / "Admittedly, there are some downsides, such as ____."</li>
+<li>"So, overall, I believe this change would ____." / "On balance, I'd say the benefits clearly outweigh the drawbacks."</li>
+<li>"Let me explain with a simple example."</li>
+</ul>
+<p><strong>Sample question:</strong> Some cities want to ban cars from the city centre. Is this a good idea?</p>
+<p><strong>Sample answer:</strong> Yes, I think it's a good idea, especially in small historic towns. The main reason is that the streets in these towns are too narrow for so many cars. For example, in Urla, where I live, the centre is always full of traffic, and most cars carry only one or two people. If people parked a little outside the centre, they could walk to the shops and cafés in about five minutes. Of course, some people might say this is hard for big families or older people, but the city could offer small electric buses. So, overall, I think banning cars would make our town centres quieter, cleaner and safer.</p>
+<h2 id="your-health-answers-improved">Your health answers, improved</h2>
+<p>These are your own answers from the health interview, corrected and given the full structure. Each takes about 45 seconds.</p>
+<p><strong>Question 1:</strong> What do you usually do to stay healthy?</p>
+<p>I try to stay healthy by exercising, walking and eating better. The main reason is that I'm a software engineer, so I sit in front of a screen all day. For example, I don't drive anywhere under three kilometres. I walk instead. I also choose healthy snacks, like apples or bananas, instead of crisps. Right now, I'm trying a diet that mostly relies on raw foods, because I want to find out which foods are good for me and which ones are not. So, overall, small daily choices help me stay healthy, even with a desk job.</p>
+<p><strong>Question 2:</strong> Tell me about a time when you changed a habit to become healthier.</p>
+<p>About three years ago, I decided to make walking part of my daily routine. At first, it was really hard. For three months, I forced myself to wake up early and go for a walk every morning, without thinking about it too much. After those three months, it wasn't hard anymore. It had become a habit. Now I really love walking, at any time of the day, but especially in the morning, because it clears my mind before work. So, overall, it was one of the best changes I've ever made, and I think everyone should try it.</p>
+<p><strong>Question 3:</strong> Some people say, "Working from home is bad for your health." Do you agree or disagree?</p>
+<p>I disagree with this statement. In my opinion, working from home can actually make you healthier, because you have more control over your time. For example, I'm a software engineer, and I work from home most days. Thanks to that, I can go for a walk early in the morning, or plan a workout in the middle of the day. If I worked in an office, I would spend about two hours a day in traffic, and I wouldn't have time for exercise. Of course, some people sit too much at home, but that depends on their habits. So, overall, I think working from home is good for your health if you plan your day well.</p>
+<p><strong>Question 4:</strong> Some governments want to put an extra tax on sugary drinks. Is this a good idea?</p>
+<p>Yes, I think it's a good idea. The main reason is that many people buy sugary drinks out of habit, without thinking about their effect on their health. Children especially choose them because they are often cheaper than healthier drinks. For example, at the shop near my house, a can of cola costs less than a bottle of fresh juice. If the price goes up, people will think twice before buying one. Of course, a tax alone won't make people healthy, but it's an important first step, because prices really affect people's choices. So, overall, I believe this tax would help people, especially children, make healthier decisions.</p>
+<h2 id="education-interview-full-feedback">Education interview: full feedback</h2>
+<p>Estimated band for this round: about 3.5 to 4 out of 6. Your ideas were good and your opinions were clear. The main gaps were short conclusions on questions 1 and 2, and grammar slips in long sentences.</p>
+<h3 id="question-1-how-do-you-usually-learn-new-things">Question 1: How do you usually learn new things?</h3>
+<p><strong>Structure:</strong> Answer yes. Reason partly (your reason was about English, not about learning in general). Example yes. Conclusion no.</p>
+<p><strong>Fixes</strong></p>
+<ul>
+<li>You said "I usually learn things with making this thing in my daily routines", say "I usually learn by using new things in my daily routine".</li>
+<li>You said "use in English", say "use English".</li>
+<li>You said "as a native person", say "like a native speaker".</li>
+</ul>
+<p><strong>Stronger sentence:</strong> "So, overall, I learn best when I use a skill in real life, not just study it."</p>
+<h3 id="question-2-a-time-you-learned-something-difficult">Question 2: A time you learned something difficult</h3>
+<p><strong>Structure:</strong> Answer yes (learning English at high school). Reason yes (fear of not being native). Example yes (homework, speaking with friends). Conclusion partly ("I develop myself" is vague).</p>
+<p><strong>Fixes</strong></p>
+<ul>
+<li>You said "in my early ages", say "when I was young".</li>
+<li>You said "I am always thinking like I couldn't be the I couldn't learn", say "I always thought I couldn't learn it".</li>
+<li>You said "I am just fearing to learn that", say "I was afraid to learn it". Use the past tense for past stories.</li>
+<li>You said "I gain confidence", say "I gained confidence".</li>
+</ul>
+<p><strong>Stronger sentence:</strong> "In the end, speaking with my friends gave me the confidence I needed, and English went from my biggest fear to one of my strengths."</p>
+<h3 id="question-3-online-classes-vs-classroom">Question 3: Online classes vs classroom</h3>
+<p><strong>Structure:</strong> Answer yes ("partially disagree"). Reason yes (confidence and no escape). Example weak (general, no personal story). Conclusion yes, but unfinished ("is better option" needs "a").</p>
+<p><strong>Fixes</strong></p>
+<ul>
+<li>You said "makes things more easier", say "makes things much easier". This is your double comparative again.</li>
+<li>You said "most of the students feels", say "most students feel".</li>
+<li>You said "there is no space to escape", say "there is no way to escape".</li>
+<li>You said "is better option", say "is a better option".</li>
+</ul>
+<p><strong>Stronger sentence:</strong> "For example, when I studied English, I made progress faster in class, because I had to speak in front of other people."</p>
+<h3 id="question-4-fully-online-first-year-courses">Question 4: Fully online first-year courses</h3>
+<p><strong>Structure:</strong> Answer yes, strong. Reason yes (real experience matters). Example yes (biology, teamwork in software engineering). Conclusion very good (it showed both sides). This was your best answer.</p>
+<p><strong>Fixes</strong></p>
+<ul>
+<li>You said "if we are experience these things", say "if we experience these things".</li>
+<li>You said "There are always be some missing points", say "There are always some missing details".</li>
+<li>You said "I am not think like", say "I don't think that".</li>
+</ul>
+<p><strong>Stronger sentence:</strong> "Online courses are fine for theory, but students need real classrooms to practise real skills."</p>
+<h3 id="overall">Overall</h3>
+<p><strong>What you did well:</strong> Question 4 had everything: a clear answer, a reason, concrete examples and a balanced conclusion. Keep that pattern.</p>
+<p><strong>The single most important thing to improve:</strong> Use the past tense for past stories and keep verbs matching their subjects. Slow down slightly in long sentences, because most of your mistakes happen there.</p>
+<p><strong>Compared with the last round:</strong> You no longer say "I'm not sure", and your conclusions are stronger. Your estimated band is now about 4, which is your goal.</p>
+<h2 id="free-time-interview-sample-answers">Free-time interview: sample answers</h2>
+<p>Improved versions of your free-time answers. Each takes about 45 seconds.</p>
+<h3 id="question-1-what-do-you-like-to-do-on-weekends">Question 1: What do you like to do on weekends?</h3>
+<p> On weekends, I really like hiking. The main reason is that I'm a software engineer, so I spend all day in front of a screen. When I hike, I can enjoy nature and get some exercise at the same time. For example, last weekend I went to the Belgrade Forest with some friends, and we walked for about three hours. We even saw a few wild animals, which was amazing. Hiking is also a great way to spend time with my friends. So, overall, hiking helps me relax and recharge for the week ahead.</p>
+<h3 id="question-2-a-time-a-hobby-helped-you-in-a-difficult-situation">Question 2: A time a hobby helped you in a difficult situation</h3>
+<p> About six weeks ago, I had a really difficult day at work. I was exhausted, and I had lots of problems in our code base that I couldn't fix. So I closed my computer and went for a long walk in the forest, without really thinking about it, because hiking is my favourite hobby. When I came home three hours later, I felt completely different. My mind was clear, I felt calmer and more confident, and I was much less stressed. The next morning, I fixed the problem quickly. So, overall, that day showed me how important my hobby is for my mental health.</p>
+<h3 id="question-3-should-people-spend-less-time-on-screens-in-their-free-time">Question 3: Should people spend less time on screens in their free time?</h3>
+<p> I partly agree with this statement. If we're talking about social media, like Instagram or Facebook, then yes, I think people should spend much less time on it. However, for people like me who work in software engineering, screens are part of the job, so it's not that simple. For example, last year I tried a screen-free week during my holiday. At first it was hard, but after a few days, my mind felt clearer, and I was less stressed and more confident. That's why I think everyone should try it at least once a year. So, overall, I believe we should reduce screen time for fun, even if we can't avoid it at work.</p>
+<h3 id="question-4-should-cities-close-shopping-centres-on-sundays">Question 4: Should cities close shopping centres on Sundays?</h3>
+<p> No, I don't think it's a good idea. The main reason is that many people have very limited free time, and Sunday is often the only day they can go shopping. For example, parents who work full-time, or doctors who work long shifts during the week, really need the shopping centres to be open at the weekend. If they close, these people's lives would become much more difficult. Of course, I understand the idea behind it, because people should spend more time outdoors. But I think cities should encourage this in other ways, for example by building more parks and walking paths. So, overall, closing shopping centres is not the right way to solve this problem.</p>
+<h2 id="work-interview-sample-answers">Work interview: sample answers</h2>
+<p>Improved versions of your work answers. Each takes about 45 seconds.</p>
+<h3 id="question-1-what-do-you-enjoy-most-about-your-job">Question 1: What do you enjoy most about your job?</h3>
+<p>What I enjoy most about my job is creating solutions that help our customers. I'm a full-stack software engineer at a company that builds transcription, translation, subtitle and dubbing products, like live transcription. Every day, I talk to customers and get feedback from them. For example, last month a customer told me our live transcription tool saved her hours of work on her interviews. Moments like that make me feel that my work really matters. So, overall, helping people and making their lives easier is the best part of my job.</p>
+<h3 id="question-2-tell-me-about-a-big-challenge-at-work">Question 2: Tell me about a big challenge at work.</h3>
+<p>About six months ago, I faced a real crisis at work. At that time, I worked for an international online high school, and during a maintenance, our database was deleted. We lost a lot of data about our students. The problem was caused by a third-party company, but I was the person most responsible for that system. So I reported the whole situation to our stakeholders right away, and then I worked on a solution. In the end, we recovered some of the data, but not all of it. We informed our students and their guardians, and organised information sessions for each group. So, overall, that experience taught me how important honesty and quick action are in a crisis.</p>
+<h3 id="question-3-is-it-better-to-stay-at-one-company-for-many-years">Question 3: Is it better to stay at one company for many years?</h3>
+<p>I agree with this statement, as long as the company is a good fit. The main reason is that it takes time to really understand a company. For example, this is my second year at my company, and I feel much more confident now than in my first few months. I understand the systems, the people and the details, and I'm still learning new things every day. You can't get that kind of knowledge in three months. Of course, if a company doesn't suit your personality or career goals, changing jobs makes sense. So, overall, I think staying at one company for years can be the better choice.</p>
+<h3 id="question-4-is-a-four-day-working-week-a-good-idea">Question 4: Is a four-day working week a good idea?</h3>
+<p>Yes, I think it's a good idea. The main reason is that with a five-day week, it's very hard to balance work and personal life. If we worked four days a week, we would probably be more focused on our work days, and we could spend more quality time with our families, our friends and ourselves. For example, on weeks when I have a public holiday, I notice that I work faster and feel much more motivated. Of course, some jobs, like doctors or shop workers, might find it harder to switch. But overall, I believe it would be a win-win situation for both companies and workers.</p>
+<h2 id="environment-interview-sample-answers">Environment interview: sample answers</h2>
+<p>Improved versions of your environment answers. Each takes about 45 seconds.</p>
+<h3 id="question-1-what-do-you-do-in-your-daily-life-to-help-the-environment">Question 1: What do you do in your daily life to help the environment?</h3>
+<p>I try to make small, everyday choices that help the environment. First, I walk whenever a trip is shorter than three kilometres, so I use my car much less. Second, I try to avoid plastic. For example, I always carry my own bottle and fill it with water, instead of buying plastic bottles. When I need something new, I also choose reusable products. These things are simple, but they add up over a year. So, overall, I believe small daily habits really make a difference.</p>
+<h3 id="question-2-an-environmental-problem-near-where-you-live">Question 2: An environmental problem near where you live</h3>
+<p>A few years ago, there was a small green area with lots of trees right next to our home. One day, some people came and cut down the trees without permission. My neighbours and I tried to stop them, and we reported it to the authorities, but nobody took any real action. Three years later, the government gave permission to build there, because there were no trees left. Now there's a new apartment building, and the flats have all been sold. I felt really angry and powerless. So, overall, that experience showed me how easily nature can disappear if nobody protects it.</p>
+<h3 id="question-3-can-individuals-make-a-difference-or-only-governments-and-companies">Question 3: Can individuals make a difference, or only governments and companies?</h3>
+<p>I partly agree with this statement. Individuals can make small changes, and they're important, but on their own, they rarely bring big results. The main reason is that companies control production. For example, I can stop buying plastic bottles, but a big company can redesign its whole production line and remove millions of bottles at once. Governments can also make rules that every company has to follow. That said, individuals still matter, because our choices push companies to change. So, overall, I think real change needs governments and companies, but individuals can start it.</p>
+<h3 id="question-4-should-cities-charge-a-fee-for-plastic-bags-and-bottles">Question 4: Should cities charge a fee for plastic bags and bottles?</h3>
+<p>Yes, I think it's a good idea. The main reason is that a small fee helps people build better habits. For example, my city already charges for plastic bags, and I've seen a real difference. Now most people only take a bag when they really need one, and many people bring their own reusable bags. Plastic bags are usually not reusable, but switching to reusable products is actually very easy once it becomes a habit. Of course, some people may find it annoying at first, but they get used to it quickly. So, overall, I believe a small fee is a simple and effective way to reduce plastic.</p>
+
+</main>
+<footer class="page-footer">Published with <a href="https://github.com/oztalha/open-md">OpenMD</a></footer>
+<script>(() => {
+  const root = document.documentElement;
+  const icons = {
+    auto: '<circle cx="8" cy="8" r="6"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/>',
+    light: '<circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3"/>',
+    dark: '<path d="M13.5 9.5A5.5 5.5 0 1 1 6.5 2.5a4.5 4.5 0 0 0 7 7z"/>',
+  };
+  const labels = { auto: "Theme: match system", light: "Theme: light", dark: "Theme: dark" };
+  const next = { auto: "light", light: "dark", dark: "auto" };
+  const button = document.createElement("button");
+  button.className = "theme-toggle";
+  const render = () => {
+    const mode = root.dataset.theme || "auto";
+    button.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">' + icons[mode] + "</svg>";
+    button.title = labels[mode];
+    button.setAttribute("aria-label", labels[mode]);
+  };
+  button.addEventListener("click", () => {
+    const mode = next[root.dataset.theme || "auto"];
+    if (mode === "auto") delete root.dataset.theme;
+    else root.dataset.theme = mode;
+    try {
+      if (mode === "auto") localStorage.removeItem("md-viewer-theme");
+      else localStorage.setItem("md-viewer-theme", mode);
+    } catch {} // storage blocked: the choice lasts for this visit
+    render();
+  });
+  render();
+  document.body.appendChild(button);
+})();</script>
+<script>(() => {
+  const headings = [...document.querySelectorAll("main h1, main h2, main h3, main h4")];
+  if (headings.length < 2) return;
+  const top = Math.min(...headings.map((h) => +h.tagName[1]));
+  const widths = [28, 22, 16, 12];
+  const nav = document.createElement("nav");
+  nav.className = "page-outline";
+  nav.setAttribute("aria-label", "Outline");
+  const list = document.createElement("ol");
+  const buttons = headings.map((h) => {
+    const depth = +h.tagName[1] - top;
+    const item = document.createElement("li");
+    const button = document.createElement("button");
+    const dash = document.createElement("span");
+    dash.className = "po-dash";
+    dash.style.width = widths[depth] + "px";
+    dash.style.marginRight = (widths[0] - widths[depth]) + "px";
+    const text = document.createElement("span");
+    text.className = "po-text";
+    text.textContent = h.textContent.trim();
+    text.style.setProperty("--po-indent", depth * 16 + "px");
+    button.title = text.textContent;
+    button.append(dash, text);
+    button.addEventListener("click", () => h.scrollIntoView({ behavior: "smooth", block: "start" }));
+    item.append(button);
+    list.append(item);
+    return button;
+  });
+  const toggle = document.createElement("button");
+  toggle.className = "po-toggle";
+  toggle.setAttribute("aria-label", "Outline");
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M3 4h10M3 8h10M3 12h6"/></svg>';
+  const setOpen = (open) => {
+    nav.classList.toggle("open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+  };
+  toggle.addEventListener("click", () => setOpen(!nav.classList.contains("open")));
+  list.addEventListener("click", () => setOpen(false));
+  document.addEventListener("click", (e) => { if (!nav.contains(e.target)) setOpen(false); });
+  nav.append(toggle, list);
+  document.body.append(nav);
+  // The current section: the last heading scrolled past the top (the first
+  // before any), or the last one once the page is scrolled to the end.
+  let queued = false;
+  const update = () => {
+    queued = false;
+    let current = 0;
+    headings.forEach((h, i) => { if (h.getBoundingClientRect().top <= 96) current = i; });
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) current = headings.length - 1;
+    buttons.forEach((b, i) => b.setAttribute("aria-current", String(i === current)));
+  };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+})();</script>
+<script>(() => {
+  const first = [...document.querySelectorAll("main > *")].find((el) => !el.classList.contains("frontmatter"));
+  if (!first || first.tagName !== "H1") return;
+  const bar = document.createElement("div");
+  bar.className = "page-title-bar";
+  bar.setAttribute("aria-hidden", "true");
+  const text = document.createElement("span");
+  text.textContent = first.textContent.trim();
+  bar.append(text);
+  bar.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+  document.body.append(bar);
+  new IntersectionObserver(([entry]) => {
+    bar.classList.toggle("shown", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+  }).observe(first);
+})();</script>
+</body>
+</html>
